@@ -1,0 +1,64 @@
+/* סגנון כללי של הקונטיינר */
+.container {
+    position: relative; /* מאפשר מיקום אבסולוטי של אלמנטים בתוך הקונטיינר */
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 20px;
+    height: 100vh; /* גובה מלא של המסך */
+}
+
+/* שורה למיקום 1 - צמודה לראש המסך */
+.row-1 {
+    position: absolute; /* מיקום יחסי למסגרת הקונטיינר */
+    top: 0; /* צמוד לראש המסך */
+    left: 0; /* צמוד לשמאל המסך */
+    right: 0; /* צמוד לימין המסך */
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    justify-content: center; /* ממקם את האובייקטים במרכז לרוחב */
+    align-items: center; /* מרכז את האובייקטים לאורך */
+    overflow: hidden; /* מונע גלילה */
+    flex-wrap: nowrap; /* מונע ירידת שורות */
+    z-index: 1; /* שורה זו תהיה מעל כל האחרות */
+    background-color: white; /* רקע לבן כדי לכסות כל חפיפות */
+}
+
+/* עמודה למיקום 2 - צמודה לשמאל המסך */
+.column-2 {
+    position: absolute; /* מיקום יחסי למסגרת הקונטיינר */
+    left: 0; /* צמוד לשמאל המסך */
+    top: 0; /* צמוד לראש המסך */
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex-wrap: wrap; /* מאפשר ירידת שורות במקרה של עומס */
+    z-index: 0; /* עמודה זו תהיה מתחת לשורה העליונה */
+}
+
+/* עמודה למיקום 3 - צמודה לימין המסך */
+.column-3 {
+    position: absolute; /* מיקום יחסי למסגרת הקונטיינר */
+    right: 0; /* צמוד לימין המסך */
+    top: 0; /* צמוד לראש המסך */
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex-wrap: wrap; /* מאפשר ירידת שורות במקרה של עומס */
+    z-index: 0; /* עמודה זו תהיה מתחת לשורה העליונה */
+}
+
+/* סגנון של כל מלבן */
+.box {
+    width: 300px; /* הגודל ההתחלתי */
+    height: 90px; /* הגודל ההתחלתי */
+    color: white;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
+    transition: all 0.3s ease; /* מעבר חלק לגודל חדש */
+    flex-shrink: 1; /* מאפשר הקטנה דינמית */
+}
