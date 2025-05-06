@@ -86,7 +86,7 @@ const Positionedparkings = () => {
     //     return <Button label="Export" icon="pi pi-upload" className="p-button-help" onClick={exportCSV} />;
     // };
     const confirmDeleteProduct = (product) => {
-        console.log("product", product)
+        // console.log("product", product)
         setProduct(product);
         setDeleteProductDialog(true);
     };
@@ -107,7 +107,7 @@ const Positionedparkings = () => {
         return id;
     };
     const saveProduct = async () => {
-        console.log(product)
+        // console.log(product)
         if (product.locationParking && product.sizeParking) {
             setSubmitted(true);
             if (product.locationParking.trim()) {
@@ -141,7 +141,7 @@ const Positionedparkings = () => {
                     _product.id = createId();
 
                     _product.image = 'product-placeholder.svg';
-                    console.log(_product, _products)
+                    // console.log(_product, _products)
                     _products.push(_product);
                     toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Product Created', life: 3000 });
                 }
@@ -163,7 +163,7 @@ const Positionedparkings = () => {
         setDeleteProductDialog(false);
         setProduct(emptyProduct);
         try {
-            console.log(product)
+            // console.log(product)
             const res = await axios.delete(`http://localhost:8090/api/Parking/${product._id}`)
         }
         catch (a) {
@@ -247,10 +247,10 @@ const Positionedparkings = () => {
 
     const getAllParking = async (token) => {
         try {
-            console.log("props", props)
+            // console.log("props", props)
             const res = await axios.get(`http://localhost:8090/api/Parkinglot/${props._id}`);
             if (res.status === 200) {
-                console.log("parkunglots", res.data.allParkinglot)
+                // console.log("parkunglots", res.data.allParkinglot)
                 return res.data.allParkinglot;
             }
         } catch (e) {
@@ -271,7 +271,7 @@ const Positionedparkings = () => {
 
  
                 <div className="row row-1" >
-                    {console.log(parkings)}
+                    {/* {console.log(parkings)} */}
                     {parkings
                         .filter((obj) => obj.locationParking.charAt(0) == 'A')
                         .sort((a, b) => {
@@ -379,12 +379,6 @@ const Positionedparkings = () => {
                             </label>
                             <InputNumber id="price" value={product.priceParking} onValueChange={(e) => onInputNumberChange(e, 'priceParking')} mode="currency" currency="USD" locale="en-US" />
                         </div>
-                        {/* <div className="field col">
-                        <label htmlFor="quantity" className="font-bold">
-                            Quantity
-                        </label>
-                        <InputNumber id="quantity" value={product.quantity} onValueChange={(e) => onInputNumberChange(e, 'quantity')} />
-                    </div> */}
 
                         <div className="card flex justify-content-center">
                             <label htmlFor="isHandicappedParking" className="font-bold">

@@ -42,7 +42,7 @@ export default function Register() {
         
         try {
             const res = await axios.post(`http://localhost:8090/api/auth/register`, data)
-            console.log(res.data.accessToken);
+            // console.log(res.data.accessToken);
 
             // if (res.status === 409)
             //     alert(res.data)
