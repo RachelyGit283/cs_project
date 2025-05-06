@@ -35,11 +35,11 @@
 //         navigate("/Register");
 //       };
 //     const defaultValues = {
-       
+
 //         passwordUser: '',
 //         idUser: ' '
-  
-     
+
+
 //     }
 //     const { control, formState: { errors }, handleSubmit, reset } = useForm({ defaultValues });
 //     const onSubmit = async (data) => {
@@ -55,7 +55,7 @@
 
 //             setFormData(data);
 //             setShowMessage(true);
-            
+
 //             reset();
 //             goToOtherComponent()
 //         }
@@ -114,7 +114,7 @@
 //                 <div className="card">
 //                     <h5 className="text-center">Register</h5>
 //                     <form onSubmit={handleSubmit(onSubmit)} className="p-fluid">
-                 
+
 //                         <div className="field">
 //                             <span className="p-float-label">
 //                                 <Controller name="passwordUser" control={control} rules={{ required: 'Password is required.' }} render={({ field, fieldState }) => (
@@ -124,7 +124,7 @@
 //                             </span>
 //                             {getFormErrorMessage('passwordUser')}
 //                         </div>
-       
+
 //                         <div className="field">
 //                             <span className="p-float-label p-input-icon-right">
 //                                 <i className="pi pi-key" />
@@ -143,7 +143,7 @@
 //                             {getFormErrorMessage('idUser')} 
 
 //                         </div>
-                      
+
 
 //                         <Button type="submit" label="Submit" className="mt-2"  />
 
@@ -192,7 +192,7 @@ export default function Login() {
     const goToOtherComponent = () => {
         navigate("/AllCars");
     };
-    
+
     const goToRegisterComponent = () => {
         navigate("/Register");
     };
@@ -212,7 +212,6 @@ export default function Login() {
             dispatch(setToken(res.data.accessToken));
             dispatch(setRolse(res.data.rolesUser));
             dispatch(setUser(res.data.foundUser));
-
             console.log(res.data.rolesUser)
             console.log(token)
             setFormData(data);
@@ -222,6 +221,7 @@ export default function Login() {
             goToOtherComponent();
         }
         catch (a) {
+            alert("try again or register")
             console.log("server error", a);
         }
     };
