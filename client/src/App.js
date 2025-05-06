@@ -19,8 +19,10 @@ import Menu from './comp/Navbar';
 
 
 function App() {
+  
   return (
     <div className="App">
+      
            <Menu/>
 
       <Routes>

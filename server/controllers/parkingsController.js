@@ -242,7 +242,7 @@ const updateUPcar = async (req, res) => {
         const date2 = new Date(dateNow);
 
         // חישוב ההפרש בדקות
-        const dateDiffDays = Math.abs((date2 - date1) / (1000 * 60))* parkings.priceParking;
+        const dateDiffDays = Math.abs((date2 - date1) / (1000 * 60));
 
         // const dateDiffDays = parseInt((parkings.timeStartParking - dateNow) / (1000 * 60 * 60 * 24 * 30)) * parkings.priceParking;
         const updatep = await parkings.save()

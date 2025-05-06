@@ -128,7 +128,7 @@ export default function AllCars() {
 
     const deleteProduct = async () => {
         let _products = products.filter((val) => val.id !== product.id);
-
+debugger
         setProducts(_products);
         setDeleteProductDialog(false);
         setProduct(emptyProduct);
@@ -138,6 +138,8 @@ export default function AllCars() {
         catch (a) {
             console.log("server error", a);
         }
+        Car.getProducts(token).then((data) => setProducts(data));
+
         toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Product Deleted', life: 3000 });
     };
     const release = async () => {
@@ -157,6 +159,8 @@ export default function AllCars() {
             console.log("putRes.status", putRes.data.dateDiffDays);
 
             if (putRes.status === 200) {
+                Car.getProducts(token).then((data) => setProducts(data));
+
                 toast.current.show({
                     severity: 'success',
                     summary: 'Successful',
