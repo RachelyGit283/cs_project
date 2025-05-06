@@ -264,6 +264,7 @@ console.log("props",props)
 
 
             <div className="row row-1" >
+                {console.log(parkings)}
                 {parkings
                     .filter((obj) => obj.locationParking.charAt(0) == 'A')
                     .map((obj) => (

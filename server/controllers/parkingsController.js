@@ -5,22 +5,22 @@ const Parkinglots = require("../models/Parkinglots");
 const Cars = require("../models/Cars");
 const twilio = require('twilio');
 require('dotenv').config();
-const accountSid = process.env.TWILIO_ACCOUNT_SID; // החלף ב-Account SID שלך
-const authToken =process.env.TWILIO_AUTH_TOKEN;   // החלף ב-Auth Token שלך
-const client = twilio(accountSid, authToken);
+// const accountSid = process.env.TWILIO_ACCOUNT_SID; // החלף ב-Account SID שלך
+// const authToken =process.env.TWILIO_AUTH_TOKEN;   // החלף ב-Auth Token שלך
+// const client = twilio(accountSid, authToken);
 
-async function makeCall(toPhoneNumber) {
-    try {
-        const call = await client.calls.create({
-            url: 'http://demo.twilio.com/docs/voice.xml', // URL לקובץ XML שמכיל את תוכן השיחה
-            to: toPhoneNumber, // מספר היעד (כולל קידומת המדינה, לדוגמה: +972 לישראל)
-            from: process.env.TWILIO_PHONE_NUMBER, // מספר Twilio שלך
-        });
-        console.log('Call SID:', call.sid);
-    } catch (error) {
-        console.error('Error making call:', error);
-    }
-}
+// async function makeCall(toPhoneNumber) {
+//     try {
+//         const call = await client.calls.create({
+//             url: 'http://demo.twilio.com/docs/voice.xml', // URL לקובץ XML שמכיל את תוכן השיחה
+//             to: toPhoneNumber, // מספר היעד (כולל קידומת המדינה, לדוגמה: +972 לישראל)
+//             from: process.env.TWILIO_PHONE_NUMBER, // מספר Twilio שלך
+//         });
+//         console.log('Call SID:', call.sid);
+//     } catch (error) {
+//         console.error('Error making call:', error);
+//     }
+// }
 // creat1
 function isValidString(str) {
     const regex = /^[A-Z][0-9]+$/;
