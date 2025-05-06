@@ -179,22 +179,7 @@ export default function Register() {
                             </span>
                             {getFormErrorMessage('idUser')}
                         </div>
-                        {/* <div className="field">
-                            <span className="p-float-label">
-                                <Controller name="date" control={control} render={({ field }) => (
-                                    <Calendar id={field.name} value={field.value} onChange={(e) => field.onChange(e.value)} dateFormat="dd/mm/yy" mask="99/99/9999" showIcon />
-                                )} />
-                                <label htmlFor="date">Birthday</label>
-                            </span>
-                        </div> */}
-                        {/* <div className="field">
-                            <span className="p-float-label">
-                                <Controller name="country" control={control} render={({ field }) => (
-                                    <Dropdown id={field.name} value={field.value} onChange={(e) => field.onChange(e.value)} options={countries} optionLabel="name" />
-                                )} />
-                                <label htmlFor="country">Country</label>
-                            </span>
-                        </div> */}
+                     
                         <div className="field-checkbox">
                             <Controller name="accept" control={control} rules={{ required: true }} render={({ field, fieldState }) => (
                                 <Checkbox inputId={field.name} onChange={(e) => field.onChange(e.checked)} checked={field.value} className={classNames({ 'p-invalid': fieldState.invalid })} />

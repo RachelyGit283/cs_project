@@ -35,15 +35,7 @@ const Menu = () => {
           
             }
         },
-        // rolse === 'managerParkinglot'  ?
-        // {
-        
-        //     label: 'PositionedObjects',
-        //     icon: 'pi pi-file-edit',
-        //     command: () => {
-        //         navigate('/PositionedObjects')
-        //     }
-        // }:{},
+     
         rolse === 'managerParkinglot'  ?
         {
         
@@ -64,7 +56,6 @@ const Menu = () => {
             {/* {console.log("rolse",rolse)} */}
 
        <Routes>
-       {/* <Route path='/' element={<Suspense fallback="loading..."><LazyLogin /></Suspense> } /> */}
         <Route path='/login' element={<Suspense fallback="loading..."><LazyLogin /></Suspense> } />
         <Route path='/AllCars' element={<Suspense fallback="loading..."><LazyAllCars /></Suspense> } />
         <Route path='/Register' element={<Suspense fallback="loading..."><LazyRegister /></Suspense> } />

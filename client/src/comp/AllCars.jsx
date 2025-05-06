@@ -118,7 +118,7 @@ export default function AllCars() {
 
     const deleteProduct = async () => {
         let _products = products.filter((val) => val.id !== product.id);
-debugger
+// debugger
         setProducts(_products);
         setDeleteProductDialog(false);
         setProduct(emptyProduct);
@@ -147,7 +147,7 @@ debugger
 // debugger
             if (putRes.status === 200) {
                 Car.getProducts(token).then((data) => setProducts(data));
-                debugger
+                // debugger
                 alert(`${ putRes.data.dateDiffDays} עליך לשלם`);
                 //כדי להוסיף לכל אדם חניות שלא שולמו
                 toast.current.show({
