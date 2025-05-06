@@ -210,8 +210,8 @@ const Parking = () => {
         setbool(true);
         setIndexOption(indexOption + 1)
       }
-      else
-        setbool(false);
+      // else
+      //   setbool(false);
     }
   };
   // const shortTime = async (address) => {
@@ -268,7 +268,7 @@ const Parking = () => {
         console.log("parking", res.data)
 
       }
-      alert(`car number:${product.numberCar} intersted in parkinglot:${travelMinPark} in park:${res.data.locationParking}`)
+      alert(`car number:${product.numberCar} intersted in parkinglot:${locationpl.nameParkinglot} in park:${res.data.locationParking}`)
 
     } catch (e) {
       return [];
@@ -336,7 +336,7 @@ const Parking = () => {
         const res2 = await axios.put(`http://localhost:8090/api/parking/P/${res1.data[0]._id}`, { carParking: product._id });
         if (res2.status === 200) {
           console.log("parking in ", res2.data.locationParking);
-          alert(`car number:${product.numberCar} parking in parkinglot:${travelMinPark} parking in parking:${res2.data.locationParking}`);
+          alert(`car number:${product.numberCar} parking in parkinglot:${locationpl.nameParkinglot} parking in parking:${res2.data.locationParking}`);
           goToOtherComponent();
           setbool(false); // סיום התהליך
         }
