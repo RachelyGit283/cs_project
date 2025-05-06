@@ -1,0 +1,64 @@
+Parking.css
+.container {
+    padding: 20px;
+    font-family: Arial, sans-serif;
+    text-align: center;
+}
+
+h1, p {
+    color: #333;
+}
+
+button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    margin: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.dialog-header {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #ff6f61;
+}
+
+.map-container {
+    margin-top: 20px;
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.error-message {
+    color: red;
+    margin-top: 10px;
+}
+
+/* Customize the PrimeReact Dialog */
+.p-dialog {
+    border-radius: 10px !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2) !important;
+}
+
+.p-dialog .p-dialog-header {
+    background-color: #007bff !important;
+    color: white !important;
+    font-weight: bold !important;
+}
+
+.map-container .leaflet-popup-content {
+    font-size: 14px;
+}

@@ -70,6 +70,8 @@ const Parking = () => {
       });
       if (res.status === 200) {
         console.log("parking", res.data)
+        if (res.data==[])
+          {alert("אין כרגע חניות פנויות")}
         setAllPark(res.data)
         return res.data;
       }
@@ -138,7 +140,7 @@ const Parking = () => {
         params: params
       });
       if (res.status === 200) {
-        debugger
+        debugger 
         console.log("parking", res.data)
         setGoodP(res.data)
 
@@ -226,7 +228,7 @@ setbool(false)
       //const coords1 = await getCoordinates(address1);
       //const coords2 = await getCoordinates(address2);
       const coords1 = await getCoordinates(a2);
-      debugger
+       debugger
       const coords2 = await getCoordinates(a1);
 
       // בקשה למסלול וזמן נסיעה באמצעות OSRM API
@@ -278,7 +280,7 @@ setbool(false)
       {
         console.log(product)
       }
-      <button onClick={() => shortTime(currentUrl)}>חשב זמן נסיעה</button>
+      <button onClick={() => shortTime(currentUrl)}> חניה אופציונלית </button>
       {bool ? <button onClick={() => optionParking()}>אופציה נוספת</button> : ""}
       {bool ? <button onClick={() => prevOption()}>חזרה לאופציה הקודמת </button> : ""}
 

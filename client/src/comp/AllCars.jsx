@@ -111,8 +111,10 @@ export default function AllCars() {
             setProductDialog(false);
             setProduct(emptyProduct);
         }
+        
     }
-    alert("מיספר רכב וגודלו הינם חובה")
+    else
+        alert("מיספר רכב וגודלו הינם חובה")
 
     };
 
@@ -156,11 +158,12 @@ debugger
             if (_parking.length === 0) { return console.log("error in datails") }
 
             const putRes = await axios.put(`http://localhost:8090/api/parking/unP/${_parking[0]._id}`);
-            console.log("putRes.status", putRes.data.dateDiffDays);
-
+debugger
             if (putRes.status === 200) {
                 Car.getProducts(token).then((data) => setProducts(data));
-
+                debugger
+                alert(`${ putRes.data.dateDiffDays} עליך לשלם`);
+                //כדי להוסיף לכל אדם חניות שלא שולמו
                 toast.current.show({
                     severity: 'success',
                     summary: 'Successful',

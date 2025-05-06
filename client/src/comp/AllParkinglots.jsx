@@ -448,14 +448,14 @@ console.log("saveProduct",product)
                     <label htmlFor="country" className="font-bold">
                         country
                     </label>
-                    <InputText id="country" value={product.country} onChange={(e) => onInputChange(e, 'country')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.country })} />
+                    <InputText id="country" value={product.locationParkinglot.country} onChange={(e) => onInputChange(e, 'country')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.country })} />
                     {submitted && !product.country && <small className="p-error">country is required.</small>}
                 </div>
                 <div className="field">
                     <label htmlFor="city" className="font-bold">
                         city
                     </label>
-                    <InputText id="city" value={product.city} onChange={(e) => onInputChange(e, 'city')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.city })} />
+                    <InputText id="city" value={product.locationParkinglot.city} onChange={(e) => onInputChange(e, 'city')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.city })} />
                     {submitted && !product.city && <small className="p-error">city is required.</small>}
                 </div>
                 {/* <div className="field col">
@@ -479,14 +479,14 @@ console.log("saveProduct",product)
                     <label htmlFor="street" className="font-bold">
                         street
                     </label>
-                    <InputText id="street" value={product.street} onChange={(e) => onInputChange(e, 'street')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.street })} />
+                    <InputText id="street" value={product.locationParkinglot.street} onChange={(e) => onInputChange(e, 'street')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.street })} />
                     {submitted && !product.street && <small className="p-error">street is required.</small>}
                 </div>
                 <div className="field col">
                     <label htmlFor="numberOfStreet" className="font-bold">
                         numberOfStreet
                     </label>
-                    <InputNumber id="numberOfStreet" value={product.numberOfStreet} onValueChange={(e) => onInputNumberChange(e, 'numberOfStreet')} />
+                    <InputNumber id="numberOfStreet" value={product.locationParkinglot.numberOfStreet} onValueChange={(e) => onInputNumberChange(e, 'numberOfStreet')} />
                 </div>
             </Dialog>
 
