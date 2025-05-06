@@ -159,11 +159,11 @@ const updateParkings = async (req, res) => {
             }
         }
         const updateParkings = await parkings.save()
-        const parkings2 = await Parkings.find().lean()
-        if (!parkings2?.length) {
-            return res.status(400).json({ message: 'No parkings2 found' })
-        }
-        return res.status(201).json(parkings2)
+        // const parkings2 = await Parkings.find().lean()
+        // if (!parkings2?.length) {
+        //     return res.status(400).json({ message: 'No parkings2 found' })
+        // }
+        return res.status(201).json(parkings)
     } catch (error) {
         return res.status(500).json({ message: 'Error updating parking', error });
     }
@@ -196,7 +196,7 @@ const updatePcar = async (req, res) => {
     parkings.timeStartParking = format(new Date(), "yyyy-MM-dd\tHH:mm:ss");
     const updatep = await parkings.save()
     await car.save()
-    const parkings2 = await Parkings.find().lean()
+    // const parkings2 = await Parkings.find().lean()
     // for (let index = 0; index < parkings.intrestedParking.length; index++) {
     //     const element = parkings.intrestedParking[index];
     // const userId = element.userId;
@@ -208,10 +208,10 @@ const updatePcar = async (req, res) => {
     if (index !== -1) {
         parkings.intrestedParking.splice(index, 1);
     }
-    if (!parkings2?.length) {
-        return res.status(400).json({ message: 'No Parkings found' })
-    }
-    res.json(parkings2)
+    // if (!parkings2?.length) {
+    //     return res.status(400).json({ message: 'No Parkings found' })
+    // }
+    res.json(parkings)
     // } catch (error) {
     //     return res.status(500).json({ message: 'Error updating parking', error });
     // }

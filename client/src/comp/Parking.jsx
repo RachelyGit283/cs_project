@@ -1,6 +1,8 @@
 
 import axios from 'axios';
 import { MapContainer, TileLayer, Marker, Polyline } from "react-leaflet";
+import { Card } from 'primereact/card';
+
 import { useLocation } from 'react-router-dom';
 import React, { useState, useEffect, useRef } from 'react';
 import { classNames } from 'primereact/utils';
@@ -45,6 +47,18 @@ const Parking = () => {
   const [currentUrl, setCurrentUrl] = useState('');
   // the best park
   const [goodP, setGoodP] = useState([]);
+  const [locationpl, setLocationpl] = useState({
+    _id: "",
+    nameParkinglot: "",
+    locationParkinglot: {
+      city: "",
+      country: "",
+      street: "",
+      numberOfStreet: 0
+    },
+    sizeParkinglot: 0
+  });
+
   const [error, setError] = useState(null);
   const [bool, setbool] = useState(false);
   const location = useLocation();
@@ -55,17 +69,17 @@ const Parking = () => {
   const averageSpeedKmh = 50; // מהירות ממוצעת בקמ"ש
   const goToOtherComponent = () => {
     navigate("/AllCars");
-};
+  };
   useEffect(() => {
     // עדכון הכתובת הנוכחית
     setCurrentUrl(window.location.href);
   }, []);
   const Loader = () => (
     <div className="loader">
-        <div className="spinner"></div>
-        <p>Loading...</p>
+      <div className="spinner"></div>
+      <p>Loading...</p>
     </div>
-);
+  );
 
   //all parkinglots that fit
   const allParking = async () => {
@@ -80,8 +94,7 @@ const Parking = () => {
       });
       if (res.status === 200) {
         console.log("parking", res.data)
-        if (res.data==[])
-          {alert("אין כרגע חניות פנויות")}
+        if (res.data == []) { alert("אין כרגע חניות פנויות") }
         setAllPark(res.data)
         return res.data;
       }
@@ -103,46 +116,57 @@ const Parking = () => {
     setIsLoading(true); // התחלת טעינה
 
     try {
-        // כתובת מקומית של המחשב
-        setAddress1("49 Dror, Rishon LeZion, Israel");
+      // כתובת מקומית של המחשב
+      setAddress1("49 Dror, Rishon LeZion, Israel");
 
-        // קבלת כל החניות
-        await allParking();
-        console.log("Total parking lots:", allPark.length);
+      // קבלת כל החניות
+      await allParking();
+      console.log("Total parking lots:", allPark.length);
 
-        // איטרציה על כל החניות
-        for (let index = 0; index < allPark.length; index++) {
-            const element = allPark[index].locationParkinglot;
-            const str = `${element.numberOfStreet} ${element.street}, ${element.city}, ${element.country}`;
+      // איטרציה על כל החניות
+      for (let index = 0; index < allPark.length; index++) {
+        const element = allPark[index].locationParkinglot;
+        const str = `${element.numberOfStreet} ${element.street}, ${element.city}, ${element.country}`;
 
-            setAddress2(str);
+        setAddress2(str);
 
-            // חישוב זמן נסיעה
-            const res = await calculateTravelTime(str, address1);
-            console.log("Parking ID:", allPark[index]._id);
+        // חישוב זמן נסיעה
+        const res = await calculateTravelTime(str, address1);
+        console.log("Parking ID:", allPark[index]._id);
 
-            // הוספת התוצאה למערך
-            const newItem = { key: `${res}`, value: `${allPark[index]._id.toString()}` };
-            setArrTimes((prevArr) => [...prevArr, newItem]); // שימוש ב-state הקודם
-        }
+        // הוספת התוצאה למערך
+        const newItem = { key: `${res}`, value: `${allPark[index]._id.toString()}` };
+        setArrTimes((prevArr) => [...prevArr, newItem]); // שימוש ב-state הקודם
+      }
 
-        // מיון המערך
-        sortArrayByKey(arrTimes);
-        console.log("Sorted Times:", arrTimes);
+      // מיון המערך
+      sortArrayByKey(arrTimes);
+      console.log("Sorted Times:", arrTimes);
 
-        // פעולת המשך
-        optionParking();
+      // פעולת המשך
+      optionParking();
     } catch (error) {
-        console.error("Error in shortTime:", error);
+      console.error("Error in shortTime:", error);
     } finally {
-        setIsLoading(false); // סיום טעינה
+      setIsLoading(false); // סיום טעינה
     }
-};
-  const optionParking = () => {
+  };
+  const optionParking = async () => {
     if (indexOption >= 0 && indexOption < arrTimes.length) {
       setTravelMinTime(arrTimes[indexOption].key)
       setTravelMinPark(arrTimes[indexOption].value)
-      
+      try {
+        console.log(arrTimes[indexOption].value)
+        const res = await axios.get(`http://localhost:8090/api/parkinglot/${arrTimes[indexOption].value}`);
+        if (res.status === 200) {
+          setLocationpl(res.data)
+          console.log("parkinglot in option", res.data.locationParkinglot)
+          console.log("parkinglot in option", locationpl)
+
+        }
+      } catch (e) {
+        return {};
+      }
       if (indexOption + 1 < arrTimes.length) {
         setbool(true);
         setIndexOption(indexOption + 1)
@@ -177,7 +201,7 @@ const Parking = () => {
   //   sortArrayByKey(arrTimes);
   //   console.log("arrTimes", arrTimes)
   //   optionParking();
- 
+
   // }
   const interestedParking = async () => {
     // debugger
@@ -191,7 +215,7 @@ const Parking = () => {
         params: params
       });
       if (res.status === 200) {
-         
+
         console.log("parking", res.data)
         setGoodP(res.data)
 
@@ -203,9 +227,10 @@ const Parking = () => {
       const res = await axios.put(`http://localhost:8090/api/parking/${goodP[0]._id}`, { intresteCar: product._id });
       if (res.status === 200) {
         console.log("parking", res.data)
-        alert(`car number:${product.numberCar} intersted in park:${travelMinPark}`)
 
       }
+      alert(`car number:${product.numberCar} intersted in parkinglot:${travelMinPark} in park:${res.data.locationParking}`)
+
     } catch (e) {
       return [];
     }
@@ -222,7 +247,7 @@ const Parking = () => {
       Handicapped: product.isHandicappedCar,
       size: product.sizeCar
     }
-    console.log("params",params,"travelMinPark",travelMinPark)
+    console.log("params", params, "travelMinPark", travelMinPark)
     try {
       const res = await axios.get(`http://localhost:8090/api/parkinglot/getParkingEmptyOnSize/${travelMinPark}`, {
         params: params
@@ -237,13 +262,13 @@ const Parking = () => {
     }
     try {
       console.log(product._id)
-      const res = await axios.put(`http://localhost:8090/api/parking/P/${goodP[0]._id}`, {carParking:product._id});
+      const res = await axios.put(`http://localhost:8090/api/parking/P/${goodP[0]._id}`, { carParking: product._id });
       if (res.status === 200) {
-        console.log("parking", res.data)
-        alert(`car number:${product.numberCar} parking in park:${travelMinPark._id}`)
+        console.log("parking in ", res.data.locationParking)
+        alert(`car number:${product.numberCar} parking in parkinglot:${travelMinPark} parking in parking:${res.data.locationParking}`)
         goToOtherComponent();
 
-setbool(false)
+        setbool(false)
       }
     } catch (e) {
       return [];
@@ -307,11 +332,11 @@ setbool(false)
   };
   return (
     <div>
-         <div>
+      <div>
         {isLoading && <Loader />} {/* הצגת אנימציה בזמן טעינה */}
         {/* <button onClick={() => shortTime("Your Address Here")}>Run Short Time</button> */}
         {/* תוכן נוסף */}
-    </div>
+      </div>
       {/* <h1>מחשבון זמן נסיעה</h1>
       <div>
         <label>
@@ -338,9 +363,31 @@ setbool(false)
       {
         console.log(product)
       }
-      <button onClick={() => shortTime(currentUrl)}> חניה אופציונלית </button>
-      {bool ? <button onClick={() => optionParking()}>אופציה נוספת</button> : ""}
-      {bool ? <button onClick={() => prevOption()}>חזרה לאופציה הקודמת </button> : ""}
+     {!bool && ( <Button
+        label="חניה אופציונלית"
+        icon="pi pi-map-marker"
+        className="p-button-raised p-button-rounded p-button-success"
+        onClick={() => shortTime(currentUrl)}
+      />
+)}
+
+      {bool && (
+        <Button
+          label="אופציה נוספת"
+          icon="pi pi-plus"
+          className="p-button-raised p-button-rounded p-button-warning"
+          onClick={() => optionParking()}
+        />
+      )}
+
+      {bool && (
+        <Button
+          label="חזרה לאופציה הקודמת"
+          icon="pi pi-arrow-left"
+          className="p-button-raised p-button-rounded p-button-secondary"
+          onClick={() => prevOption()}
+        />
+      )}
 
       <Dialog visible={interested} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Confirm" modal footer={interestedDialoge} onHide={hideInterestedDialog}>
         <div className="confirmation-content">
@@ -349,13 +396,31 @@ setbool(false)
         </div>
       </Dialog>
       {travelMinTime !== null && (
-        <p>זמן הנסיעה המשוער{travelMinPark} הוא {travelMinTime} דקות</p>
-        
-
+        <Card
+          title="Parking Lot Details"
+          subTitle={`Estimated Travel Time: ${travelMinTime}`}
+          className="p-shadow-4"
+        >
+          <div>
+            <p><strong>Parking Lot Name:</strong> {locationpl.nameParkinglot}</p>
+            <p><strong>Location:</strong></p>
+            <ul>
+              <li><strong>City:</strong> {locationpl.locationParkinglot.city}</li>
+              <li><strong>Country:</strong> {locationpl.locationParkinglot.country}</li>
+              <li><strong>Street:</strong> {locationpl.locationParkinglot.street}</li>
+              <li><strong>Street Number:</strong> {locationpl.locationParkinglot.numberOfStreet}</li>
+            </ul>
+          </div>
+        </Card>
       )}
       <br />
       {travelMinTime !== null && (
-        <button onClick={() => setInterested(true)}> בחירת חניון </button>
+        <Button
+          label="בחירת חניון"
+          icon="pi pi-check"
+          className="p-button-raised p-button-rounded p-button-primary"
+          onClick={() => setInterested(true)}
+        />
       )}
       {error && <p style={{ color: 'red' }}>שגיאה: {error}</p>}
       <MapContainer
