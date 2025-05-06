@@ -31,6 +31,7 @@ import { BrowserRouter as Router, Routes, Route, useNavigate } from "react-route
 import { getDistance } from 'geolib';
 
 const Parking = () => {
+  const [isLoading, setIsLoading] = useState(false);
   const [address1, setAddress1] = useState('');
   const [indexOption, setIndexOption] = useState(0);
   const [address2, setAddress2] = useState('');
@@ -48,14 +49,23 @@ const Parking = () => {
   const [bool, setbool] = useState(false);
   const location = useLocation();
   const [interested, setInterested] = useState();
+  const navigate = useNavigate();
 
   const { product } = location.state || {};
   const averageSpeedKmh = 50; // מהירות ממוצעת בקמ"ש
+  const goToOtherComponent = () => {
+    navigate("/AllCars");
+};
   useEffect(() => {
     // עדכון הכתובת הנוכחית
     setCurrentUrl(window.location.href);
   }, []);
-
+  const Loader = () => (
+    <div className="loader">
+        <div className="spinner"></div>
+        <p>Loading...</p>
+    </div>
+);
 
   //all parkinglots that fit
   const allParking = async () => {
@@ -90,31 +100,44 @@ const Parking = () => {
   };
   //נותן מערך עם זמני הנסיעה הקצרים ביותר
   const shortTime = async (address) => {
-    //זו הכתובת המקומית של המחשב 
-    debugger
-    setAddress1("49 Dror, Rishon LeZion, Israel");
-    //in setAllPark all the parkinglots that ok
-    allParking();
-    // let newArr = [];
-    // let min = Number.MAX_SAFE_INTEGER;
-    // let parkingShort;     
-    console.log(allPark.length)
-    for (let index = 0; index < allPark.length; index++) {
-      const element = allPark[index].locationParkinglot;
-      const str = `${element.numberOfStreet} ${element.street}, ${element.city}, ${element.country}`;
-      setAddress2(str);
-      // handleCalculate()
-      let res = await calculateTravelTime(str, address1)
-      console.log("allPark[index]",allPark[index]._id)
+    setIsLoading(true); // התחלת טעינה
 
-      const newItem = { key: `${res}`, value: `${allPark[index]._id.toString()}` };
-      setArrTimes([...arrTimes, newItem]);
-    };
+    try {
+        // כתובת מקומית של המחשב
+        setAddress1("49 Dror, Rishon LeZion, Israel");
 
-    sortArrayByKey(arrTimes);
-    console.log("arrTimes", arrTimes)
-    optionParking();
-  }
+        // קבלת כל החניות
+        await allParking();
+        console.log("Total parking lots:", allPark.length);
+
+        // איטרציה על כל החניות
+        for (let index = 0; index < allPark.length; index++) {
+            const element = allPark[index].locationParkinglot;
+            const str = `${element.numberOfStreet} ${element.street}, ${element.city}, ${element.country}`;
+
+            setAddress2(str);
+
+            // חישוב זמן נסיעה
+            const res = await calculateTravelTime(str, address1);
+            console.log("Parking ID:", allPark[index]._id);
+
+            // הוספת התוצאה למערך
+            const newItem = { key: `${res}`, value: `${allPark[index]._id.toString()}` };
+            setArrTimes((prevArr) => [...prevArr, newItem]); // שימוש ב-state הקודם
+        }
+
+        // מיון המערך
+        sortArrayByKey(arrTimes);
+        console.log("Sorted Times:", arrTimes);
+
+        // פעולת המשך
+        optionParking();
+    } catch (error) {
+        console.error("Error in shortTime:", error);
+    } finally {
+        setIsLoading(false); // סיום טעינה
+    }
+};
   const optionParking = () => {
     if (indexOption >= 0 && indexOption < arrTimes.length) {
       setTravelMinTime(arrTimes[indexOption].key)
@@ -128,9 +151,36 @@ const Parking = () => {
         setbool(false);
     }
   };
+  // const shortTime = async (address) => {
+  //   setIsLoading(true); 
+  //   //זו הכתובת המקומית של המחשב 
+  //   // debugger
+  //   setAddress1("49 Dror, Rishon LeZion, Israel");
+  //   //in setAllPark all the parkinglots that ok
+  //   allParking();
+  //   // let newArr = [];
+  //   // let min = Number.MAX_SAFE_INTEGER;
+  //   // let parkingShort;     
+  //   console.log(allPark.length)
+  //   for (let index = 0; index < allPark.length; index++) {
+  //     const element = allPark[index].locationParkinglot;
+  //     const str = `${element.numberOfStreet} ${element.street}, ${element.city}, ${element.country}`;
+  //     setAddress2(str);
+  //     // handleCalculate()
+  //     let res = await calculateTravelTime(str, address1)
+  //     console.log("allPark[index]",allPark[index]._id)
 
+  //     const newItem = { key: `${res}`, value: `${allPark[index]._id.toString()}` };
+  //     setArrTimes([...arrTimes, newItem]);
+  //   };
+
+  //   sortArrayByKey(arrTimes);
+  //   console.log("arrTimes", arrTimes)
+  //   optionParking();
+ 
+  // }
   const interestedParking = async () => {
-    debugger
+    // debugger
     hideInterestedDialog()
     const params = {
       Handicapped: product.isHandicappedCar,
@@ -191,6 +241,8 @@ const Parking = () => {
       if (res.status === 200) {
         console.log("parking", res.data)
         alert(`car number:${product.numberCar} parking in park:${travelMinPark._id}`)
+        goToOtherComponent();
+
 setbool(false)
       }
     } catch (e) {
@@ -229,7 +281,7 @@ setbool(false)
       //const coords1 = await getCoordinates(address1);
       //const coords2 = await getCoordinates(address2);
       const coords1 = await getCoordinates(a2);
-       debugger
+      //  debugger
       const coords2 = await getCoordinates(a1);
 
       // בקשה למסלול וזמן נסיעה באמצעות OSRM API
@@ -255,6 +307,11 @@ setbool(false)
   };
   return (
     <div>
+         <div>
+        {isLoading && <Loader />} {/* הצגת אנימציה בזמן טעינה */}
+        {/* <button onClick={() => shortTime("Your Address Here")}>Run Short Time</button> */}
+        {/* תוכן נוסף */}
+    </div>
       {/* <h1>מחשבון זמן נסיעה</h1>
       <div>
         <label>
