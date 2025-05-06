@@ -130,6 +130,7 @@ const Parking = () => {
   };
 
   const interestedParking = async () => {
+    debugger
     hideInterestedDialog()
     const params = {
       Handicapped: product.isHandicappedCar,
@@ -140,7 +141,7 @@ const Parking = () => {
         params: params
       });
       if (res.status === 200) {
-        debugger 
+         
         console.log("parking", res.data)
         setGoodP(res.data)
 
