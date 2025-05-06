@@ -12,8 +12,8 @@ async getAllCars(token) {
                 }
             });
             if (res.status === 200) {
-                console.log("carsUser",res.data)
-                console.log(res.data);
+                // console.log("carsUser",res.data)
+                // console.log(res.data);
                 return res.data.carsUser;
             }
         } catch (e) {

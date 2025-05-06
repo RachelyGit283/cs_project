@@ -87,13 +87,13 @@ const Parking = () => {
       Handicapped: product.isHandicappedCar,
       size: product.sizeCar
     }
-    console.log("params", params.size)
+    // console.log("params", params.size)
     try {
       const res = await axios.get(`http://localhost:8090/api/parkinglot/emptyNoHandicapped`, {
         params: params
       });
       if (res.status === 200) {
-        console.log("parking", res.data)
+        // console.log("parking", res.data)
         if (res.data == []) { alert("אין כרגע חניות פנויות") }
         setAllPark(res.data)
         return res.data;
@@ -111,46 +111,7 @@ const Parking = () => {
       return 0;
     });
   };
-  //נותן מערך עם זמני הנסיעה הקצרים ביותר
-  // const shortTime = async (address) => {
-  //   setIsLoading(true); // התחלת טעינה
-
-  //   try {
-  //     // כתובת מקומית של המחשב
-  //     setAddress1("49 Dror, Rishon LeZion, Israel");
-
-  //     // קבלת כל החניות
-  //     await allParking();
-  //     console.log("Total parking lots:", allPark.length);
-
-  //     // איטרציה על כל החניות
-  //     for (let index = 0; index < allPark.length; index++) {
-  //       const element = allPark[index].locationParkinglot;
-  //       const str = `${element.numberOfStreet} ${element.street}, ${element.city}, ${element.country}`;
-
-  //       setAddress2(str);
-
-  //       // חישוב זמן נסיעה
-  //       const res = await calculateTravelTime(str, address1);
-  //       console.log("Parking ID:", allPark[index]._id);
-
-  //       // הוספת התוצאה למערך
-  //       const newItem = { key: `${res}`, value: `${allPark[index]._id.toString()}` };
-  //       setArrTimes((prevArr) => [...prevArr, newItem]); // שימוש ב-state הקודם
-  //     }
-
-  //     // מיון המערך
-  //     sortArrayByKey(arrTimes);
-  //     console.log("Sorted Times:", arrTimes);
-
-  //     // פעולת המשך
-  //     optionParking();
-  //   } catch (error) {
-  //     console.error("Error in shortTime:", error);
-  //   } finally {
-  //     setIsLoading(false); // סיום טעינה
-  //   }
-  // };
+  
   const shortTime = async (address) => {
     setIsLoading(true); // התחלת טעינה
   
@@ -170,7 +131,7 @@ const Parking = () => {
         const str = `${element.numberOfStreet} ${element.street}, ${element.city}, ${element.country}`;
   
         const res = await calculateTravelTime(str, address1);
-        console.log("Parking ID:", parkingLot._id);
+        // console.log("Parking ID:", parkingLot._id);
   
         // הוספת התוצאה למערך
         times.push({ key: `${res}`, value: `${parkingLot._id}` });
@@ -179,7 +140,7 @@ const Parking = () => {
       // מיון המערך ועדכון ה-state
       const sortedTimes = sortArrayByKey(times);
       setArrTimes(sortedTimes);
-      console.log("Sorted Times:", sortedTimes);
+      // console.log("Sorted Times:", sortedTimes);
   
       // פעולת המשך
       optionParking();
@@ -195,12 +156,12 @@ const Parking = () => {
       setTravelMinTime(arrTimes[indexOption].key)
       setTravelMinPark(arrTimes[indexOption].value)
       try {
-        console.log(arrTimes[indexOption].value)
+        // console.log(arrTimes[indexOption].value)
         const res = await axios.get(`http://localhost:8090/api/parkinglot/${arrTimes[indexOption].value}`);
         if (res.status === 200) {
           setLocationpl(res.data)
-          console.log("parkinglot in option", res.data.locationParkinglot)
-          console.log("parkinglot in option", locationpl)
+          // console.log("parkinglot in option", res.data.locationParkinglot)
+          // console.log("parkinglot in option", locationpl)
 
         }
       } catch (e) {
@@ -214,34 +175,7 @@ const Parking = () => {
       //   setbool(false);
     }
   };
-  // const shortTime = async (address) => {
-  //   setIsLoading(true); 
-  //   //זו הכתובת המקומית של המחשב 
-  //   // debugger
-  //   setAddress1("49 Dror, Rishon LeZion, Israel");
-  //   //in setAllPark all the parkinglots that ok
-  //   allParking();
-  //   // let newArr = [];
-  //   // let min = Number.MAX_SAFE_INTEGER;
-  //   // let parkingShort;     
-  //   console.log(allPark.length)
-  //   for (let index = 0; index < allPark.length; index++) {
-  //     const element = allPark[index].locationParkinglot;
-  //     const str = `${element.numberOfStreet} ${element.street}, ${element.city}, ${element.country}`;
-  //     setAddress2(str);
-  //     // handleCalculate()
-  //     let res = await calculateTravelTime(str, address1)
-  //     console.log("allPark[index]",allPark[index]._id)
-
-  //     const newItem = { key: `${res}`, value: `${allPark[index]._id.toString()}` };
-  //     setArrTimes([...arrTimes, newItem]);
-  //   };
-
-  //   sortArrayByKey(arrTimes);
-  //   console.log("arrTimes", arrTimes)
-  //   optionParking();
-
-  // }
+  
   const interestedParking = async () => {
     // debugger
     hideInterestedDialog()
@@ -255,7 +189,7 @@ const Parking = () => {
       });
       if (res.status === 200) {
 
-        console.log("parking", res.data)
+        // console.log("parking", res.data)
         setGoodP(res.data)
 
       }
@@ -264,10 +198,10 @@ const Parking = () => {
     }
     try {
       const res = await axios.put(`http://localhost:8090/api/parking/${goodP[0]._id}`, { intresteCar: product._id });
-      if (res.status === 200) {
-        console.log("parking", res.data)
+      // if (res.status === 200) {
+      //   console.log("parking", res.data)
 
-      }
+      // }
       alert(`car number:${product.numberCar} intersted in parkinglot:${locationpl.nameParkinglot} in park:${res.data.locationParking}`)
 
     } catch (e) {
@@ -279,40 +213,7 @@ const Parking = () => {
     setIndexOption(indexOption - 1);
     optionParking();
   };
-  //הפונקציה אינה מושלמת
-  // const chooseParking = async () => {
-  //   hideInterestedDialog()
-  //   const params = {
-  //     Handicapped: product.isHandicappedCar,
-  //     size: product.sizeCar
-  //   }
-  //   console.log("params", params, "travelMinPark", travelMinPark)
-  //   try {
-  //     const res = await axios.get(`http://localhost:8090/api/parkinglot/getParkingEmptyOnSize/${travelMinPark}`, {
-  //       params: params
-  //     });
-  //     if (res.status === 200) {
-  //       setIndexOption(0)
-  //       console.log("parking", res.data)
-  //       setGoodP(res.data)
-  //     }
-  //   } catch (e) {
-  //     return [];
-  //   }
-  //   try {
-  //     console.log(product._id)
-  //     const res = await axios.put(`http://localhost:8090/api/parking/P/${goodP[0]._id}`, { carParking: product._id });
-  //     if (res.status === 200) {
-  //       console.log("parking in ", res.data.locationParking)
-  //       alert(`car number:${product.numberCar} parking in parkinglot:${travelMinPark} parking in parking:${res.data.locationParking}`)
-  //       goToOtherComponent();
 
-  //       setbool(false)
-  //     }
-  //   } catch (e) {
-  //     return [];
-  //   }
-  // };
   const chooseParking = async () => {
     hideInterestedDialog(); // סגירת הדיאלוג
     setIsLoading(true); // הצגת טעינה
@@ -335,7 +236,7 @@ const Parking = () => {
       if (res1.data && res1.data.length > 0) {
         const res2 = await axios.put(`http://localhost:8090/api/parking/P/${res1.data[0]._id}`, { carParking: product._id });
         if (res2.status === 200) {
-          console.log("parking in ", res2.data.locationParking);
+          // console.log("parking in ", res2.data.locationParking);
           alert(`car number:${product.numberCar} parking in parkinglot:${locationpl.nameParkinglot} parking in parking:${res2.data.locationParking}`);
           goToOtherComponent();
           setbool(false); // סיום התהליך
@@ -369,7 +270,7 @@ const Parking = () => {
           )}`
         );
         if (response.data.length === 0) {
-          console.log("address", address)
+          // console.log("address", address)
           throw new Error("כתובת לא נמצאה");
         }
         const { lat, lon } = response.data[0];
@@ -407,35 +308,12 @@ const Parking = () => {
     <div>
       <div>
         {isLoading && <Loader />} {/* הצגת אנימציה בזמן טעינה */}
-        {/* <button onClick={() => shortTime("Your Address Here")}>Run Short Time</button> */}
-        {/* תוכן נוסף */}
+       
       </div>
-      {/* <h1>מחשבון זמן נסיעה</h1>
-      <div>
-        <label>
-          כתובת 1:
-          <input
-            type="text"
-            value={address1}
-            onChange={(e) => setAddress1(e.target.value)}
-            placeholder="הכנס כתובת ראשונה"
-          />
-        </label>
-      </div>
-      <div>
-        <label>
-          כתובת 2:
-          <input
-            type="text"
-            value={address2}
-            onChange={(e) => setAddress2(e.target.value)}
-            placeholder="הכנס כתובת שנייה"
-          />
-        </label>
-      </div> */}
-      {
+  
+      {/* {
         console.log(product)
-      }
+      } */}
      {!bool && ( <Button
         label="חניה אופציונלית"
         icon="pi pi-map-marker"
@@ -518,52 +396,5 @@ const Parking = () => {
 };
 
 export default Parking;
-// const handleCalculate = async () => {
-//   try {
-//     setError(null);
-//     setTravelTime(null);
 
-//     // המרת הכתובות לקואורדינטות
-//     const coords1 = await getCoordinatesFromAddress(address1);
-//     const coords2 = await getCoordinatesFromAddress(address2);
-
-//     // חישובs המרחק וזמן הנסיעה
-//     const distanceMeters = getDistance(
-//       { latitude: coords1.latitude, longitude: coords1.longitude },
-//       { latitude: coords2.latitude, longitude: coords2.longitude }
-//     );
-//     const distanceKm = distanceMeters / 1000; // המרחק בקילומטרים
-//     const time = distanceKm / averageSpeedKmh; // זמן הנסיעה בשעות
-
-//     setTravelTime(time);
-//   } catch (err) {
-//     setError(err.message);
-//   }
-// };
-// const getCoordinatesFromAddress = async (address) => {
-//   const url = `https://geocode.xyz/${encodeURIComponent(address)}?json=1`;
-//   try {
-//     const response = await axios.get(url);
-//     if (response.data.error) {
-//       throw new Error('כתובת לא נמצאה.');
-//     }
-//     const { latt, longt } = response.data;
-//     return { latitude: parseFloat(latt), longitude: parseFloat(longt) };
-//   } catch (err) {
-//     throw new Error('שגיאה באיתור קואורדינטות.');
-//   }
-// };
-// const allParkingHandicapped = async () => {
-//   try {
-//     const res = await axios.get(`http://localhost:8090/api/parkinglot/emptySpace`);
-//     if (res.status === 200) {
-//       console.log("parking", res.data)
-//       setAllPark(res.data)
-//       return res.data;
-//     }
-//   } catch (e) {
-//     return [];
-//   }
-
-// }
 

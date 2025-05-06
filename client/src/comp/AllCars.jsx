@@ -5,27 +5,18 @@ import { Column } from 'primereact/column';
 import { Car } from './Car';
 import { Toast } from 'primereact/toast';
 import { Button } from 'primereact/button';
-import { FileUpload } from 'primereact/fileupload';
-import { Rating } from 'primereact/rating';
 import { Toolbar } from 'primereact/toolbar';
-import { InputTextarea } from 'primereact/inputtextarea';
 import { IconField } from 'primereact/iconfield';
 import { InputIcon } from 'primereact/inputicon';
 import { RadioButton } from 'primereact/radiobutton';
-import { InputNumber } from 'primereact/inputnumber';
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
-import { Tag } from 'primereact/tag';
 import axios from 'axios';
-import { useDispatch, useSelector } from "react-redux";
-import { FaCheckCircle, FaExclamationCircle, FaTimesCircle } from 'react-icons/fa';
-import { TiParking } from 'react-icons/ti';
-import { IoMdCloseCircle } from 'react-icons/io';
+import { useSelector } from "react-redux";
 import { ToggleButton } from 'primereact/togglebutton';
-import { set } from 'react-hook-form';
 import { FaParking, FaMapMarkerAlt } from 'react-icons/fa';
-import { BrowserRouter as Router, Routes, Route, useNavigate } from "react-router-dom";
-import Parking from "./Parking";
+import { BrowserRouter as Router, useNavigate } from "react-router-dom";
+
 
 export default function AllCars() {
     let emptyProduct = {
@@ -50,9 +41,7 @@ export default function AllCars() {
     const dt = useRef(null);
     const token = useSelector((state) => state.token.token);
     const navigate = useNavigate();
-    // const goToOtherComponent = () => {
-    //     navigate("/Parking");
-    // };
+
     useEffect(() => {
         Car.getProducts(token).then((data) => setProducts(data));
     }, []);
@@ -89,7 +78,6 @@ export default function AllCars() {
             if (product._id) {
                 const index = findIndexById(product._id);
                 _products[index] = _product;
-                // console.log("p", product)
                 const res = await axios.put(`http://localhost:8090/api/Car/${product._id}`, product);
                 toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Product Updated', life: 3000 });
             }
@@ -146,19 +134,17 @@ debugger
     };
     const release = async () => {
         setReleaseCar(false)
-        // console.log("product_id", releaseDate)
 
         try {
             const res = await axios.get(`http://localhost:8090/api/parking/`);
             let _parking = res.data.filter((val) => val.carParking === releaseDate._id);
-            if (res.status === 200) {
-                console.log("parking", _parking[0])
-                // return res.data;
-            }
+            // if (res.status === 200) {
+            //     console.log("parking", _parking[0])
+            // }
             if (_parking.length === 0) { return console.log("error in datails") }
 
             const putRes = await axios.put(`http://localhost:8090/api/parking/unP/${_parking[0]._id}`);
-debugger
+// debugger
             if (putRes.status === 200) {
                 Car.getProducts(token).then((data) => setProducts(data));
                 debugger
@@ -210,7 +196,6 @@ debugger
     };
     const deleteSelectedProducts = async () => {
 
-        // console.log("products", products)
         let _productsDelete = products.filter((val) => selectedProducts.includes(val));
         try {
             for (let i = 0; i < _productsDelete.length; i++) {
@@ -223,20 +208,12 @@ debugger
             console.log("server error", a);
         }
         let _products = products.filter((val) => !selectedProducts.includes(val));
-        // console.log("products", _products)
         setProducts(_products);
         setDeleteProductsDialog(false);
         setSelectedProducts(null);
         toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Products Deleted', life: 3000 });
     };
-    // const deleteSelectedProducts = () => {
-    //     let _products = products.filter((val) => !selectedProducts.includes(val));
-
-    //     setProducts(_products);
-    //     setDeleteProductsDialog(false);
-    //     setSelectedProducts(null);
-    //     toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Products Deleted', life: 3000 });
-    // };
+   
 
     const onCategoryChange = (e) => {
         let _product = { ...product };
@@ -244,12 +221,7 @@ debugger
         _product['sizeCar'] = e.value;
         setProduct(_product);
     };
-    // const onCategoryChange = (e) => {
-    //     setProduct((prevState) => ({
-    //       ...prevState,
-    //       Size: e.value,
-    //     }));
-    //   };
+
     const onInputChange = (e, name) => {
         const val = (e.target && e.target.value) || '';
         let _product = { ...product };
@@ -259,14 +231,7 @@ debugger
         setProduct(_product);
     };
 
-    // const onInputNumberChange = (e, name) => {
-    //     const val = e.value || 0;
-    //     let _product = { ...product };
 
-    //     _product[`${name}`] = val;
-
-    //     setProduct(_product);
-    // };
 
     const leftToolbarTemplate = () => {
         return (
@@ -282,31 +247,17 @@ debugger
         return <Button label="Export" icon="pi pi-upload" className="p-button-help" onClick={exportCSV} />;
     };
 
-    // const imageBodyTemplate = (rowData) => {
-    //     return <img src={`https://primefaces.org/cdn/primereact/images/product/${rowData.image}`} alt={rowData.image} className="shadow-2 border-round" style={{ width: '64px' }} />;
-    // };
 
     const priceBodyTemplate = (rowData) => {
         return formatCurrency(rowData.sizeCar);
     };
 
-    // const ratingBodyTemplate = (rowData) => {
-    //     return <Rating value={rowData.rating} readOnly cancel={false} />;
-    // };
+  
 
-    //     useEffect(() => {
 
-    //         return ()=>{
-    //         <div className="card flex justify-content-center">
-    //             <ToggleButton disabled checked={product.isHandicappedCar}  className="w-8rem" />
-    //             //onChange={(e) => setChecked(e.value)}
-    //         </div>}
-    //     }, [checked]
-    // )s
     const HandicappedCar = (rowData) => {
         return <div className="card flex justify-content-center">
-            {/* {console.log(rowData, rowData.isHandicappedCar,rowData)} */}
-            {/* { rowData.isHandicappedCar?<ToggleButton disabled checked={true} className="w-8rem" />:<ToggleButton disabled checked={false} className="w-8rem" />} */}
+         
             <ToggleButton disabled checked={rowData.isHandicappedCar} className="w-8rem" />
         </div>
     };
@@ -325,46 +276,21 @@ debugger
         product.isHandicappedCar = value;
 
     };
-    // const parking = async () => {
-    //     try {
-    //         const res = await axios.get(`http://localhost:8090/api/parkinglot/67d17afef9b9780994cfa660`);
-    //         if (res.status === 200) {
-    //             console.log("parking", res.data)
-    //             getInMap(res.data)
-    //             return res.data.carsUser;
-    //         }
-    //     } catch (e) {
-    //         return [];
-    //     }
-
-    // }
-
-    // const getInMap = (branch) => {
-    //     const fixedDestination = `${branch.locationParkinglot.city}, ${branch.locationParkinglot.street}, ${branch.locationParkinglot.numberOfStreet}`; // Fixed Address
-    //     const address = encodeURIComponent(fixedDestination); // Address
-    //     // Open the directions to the fixed destination.
-    //     window.open(`https://www.google.com/maps/dir/?api=1&destination=${address}&travelmode=driving`, '_blank');
-    // };
-    // const getInMap = (branch) => {
-    //     const address = encodeURIComponent(`${branch.locationParkinglot.city}, ${branch.locationParkinglot.street}, ${branch.locationParkinglot.numberOfStreet}`); // Address
-    //     window.open(`https://www.google.com/maps/dir/?api=1&destination=${address}&travelmode=driving`, '_blank');
-    // };
 
     const statusBodyTemplate = (rowData) => {
         const handleParkingClick = () => {
             setReleaseDate(rowData)
 
             setReleaseCar(true)
-            console.log('Location icon clicked!');
+            // console.log('Location icon clicked!');
         };
 
         const handleLocationClick = () => {
-            console.log("rowData", rowData)
+            // console.log("rowData", rowData)
 
             navigate('/parking', { state: { product: rowData } }); // מעבר לקומפוננטת Parking והעברת פרופס
-            // goToOtherComponent()
-            // parking()
-            console.log('Parking icon clicked!');
+
+            // console.log('Parking icon clicked!');
         };
 
         return (
@@ -383,21 +309,7 @@ debugger
             </button>
         );
     };
-    // const getSeverity = (product) => {
-    //     switch (product.inventoryStatus) {
-    //         case 'INSTOCK':
-    //             return 'success';
 
-    //         case 'LOWSTOCK':
-    //             return 'warning';
-
-    //         case 'OUTOFSTOCK':
-    //             return 'danger';
-
-    //         default:
-    //             return null;
-    //     }
-    // };
     const header = (
         <div className="flex flex-wrap gap-2 align-items-center justify-content-between">
             <h4 className="m-0">Manage Products</h4>
@@ -442,12 +354,9 @@ debugger
                     paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
                     currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products" globalFilter={globalFilter} header={header}>
                     <Column selectionMode="multiple" exportable={false}></Column>
-                    <Column field="numberCar" header="numberCar" sortable style={{ minWidth: '12rem' }}></Column>
-                    {/* <Column field="Name" header="Name" sortable style={{ minWidth: '16rem' }}></Column> */}
-                    {/* <Column field="image" header="Image" body={imageBodyTemplate}></Column> */}
+                    <Column field="numberCar" header="numberCar" sortable style={{ minWidth: '12rem' }}></Column>  
                     <Column field="sizeCar" header="sizeCar" body={priceBodyTemplate} sortable style={{ minWidth: '8rem' }}></Column>
                     <Column field="category" header="IsHandicappedCar" body={HandicappedCar} sortable style={{ minWidth: '10rem' }}></Column>
-                    {/* <Column field="rating" header="Reviews" body={ratingBodyTemplate} sortable style={{ minWidth: '12rem' }}></Column> */}
                     <Column field="isParkingCar" header="Parking" body={statusBodyTemplate} sortable style={{ minWidth: '12rem' }}></Column>
                     <Column body={actionBodyTemplate} exportable={false} style={{ minWidth: '12rem' }}></Column>
                 </DataTable>
@@ -462,12 +371,7 @@ debugger
                     <InputText id="name" value={product.numberCar} onChange={(e) => onInputChange(e, 'numberCar')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.numberCar })} />
                     {submitted && !product.numberCar && <small className="p-error">numberCar is required.</small>}
                 </div>
-                {/* <div className="field">
-                    <label htmlFor="description" className="font-bold">
-                        Description
-                    </label>
-                    <InputTextarea id="description" value={product.description} onChange={(e) => onInputChange(e, 'description')} required rows={3} cols={20} />
-                </div> */}
+               
                 <div className="field">
                     <label className="mb-3 font-bold">Size</label>
                     <div className="formgrid grid">
