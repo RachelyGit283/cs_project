@@ -112,37 +112,75 @@ const Parking = () => {
     });
   };
   //נותן מערך עם זמני הנסיעה הקצרים ביותר
+  // const shortTime = async (address) => {
+  //   setIsLoading(true); // התחלת טעינה
+
+  //   try {
+  //     // כתובת מקומית של המחשב
+  //     setAddress1("49 Dror, Rishon LeZion, Israel");
+
+  //     // קבלת כל החניות
+  //     await allParking();
+  //     console.log("Total parking lots:", allPark.length);
+
+  //     // איטרציה על כל החניות
+  //     for (let index = 0; index < allPark.length; index++) {
+  //       const element = allPark[index].locationParkinglot;
+  //       const str = `${element.numberOfStreet} ${element.street}, ${element.city}, ${element.country}`;
+
+  //       setAddress2(str);
+
+  //       // חישוב זמן נסיעה
+  //       const res = await calculateTravelTime(str, address1);
+  //       console.log("Parking ID:", allPark[index]._id);
+
+  //       // הוספת התוצאה למערך
+  //       const newItem = { key: `${res}`, value: `${allPark[index]._id.toString()}` };
+  //       setArrTimes((prevArr) => [...prevArr, newItem]); // שימוש ב-state הקודם
+  //     }
+
+  //     // מיון המערך
+  //     sortArrayByKey(arrTimes);
+  //     console.log("Sorted Times:", arrTimes);
+
+  //     // פעולת המשך
+  //     optionParking();
+  //   } catch (error) {
+  //     console.error("Error in shortTime:", error);
+  //   } finally {
+  //     setIsLoading(false); // סיום טעינה
+  //   }
+  // };
   const shortTime = async (address) => {
     setIsLoading(true); // התחלת טעינה
-
+  
     try {
       // כתובת מקומית של המחשב
       setAddress1("49 Dror, Rishon LeZion, Israel");
-
+  
       // קבלת כל החניות
-      await allParking();
-      console.log("Total parking lots:", allPark.length);
-
+      const parkingLots = await allParking(); // שמירת התוצאה במשתנה מקומי
+      console.log("Total parking lots:", parkingLots.length);
+  
+      const times = []; // מערך זמני נסיעה
+  
       // איטרציה על כל החניות
-      for (let index = 0; index < allPark.length; index++) {
-        const element = allPark[index].locationParkinglot;
+      for (let parkingLot of parkingLots) {
+        const element = parkingLot.locationParkinglot;
         const str = `${element.numberOfStreet} ${element.street}, ${element.city}, ${element.country}`;
-
-        setAddress2(str);
-
-        // חישוב זמן נסיעה
+  
         const res = await calculateTravelTime(str, address1);
-        console.log("Parking ID:", allPark[index]._id);
-
+        console.log("Parking ID:", parkingLot._id);
+  
         // הוספת התוצאה למערך
-        const newItem = { key: `${res}`, value: `${allPark[index]._id.toString()}` };
-        setArrTimes((prevArr) => [...prevArr, newItem]); // שימוש ב-state הקודם
+        times.push({ key: `${res}`, value: `${parkingLot._id}` });
       }
-
-      // מיון המערך
-      sortArrayByKey(arrTimes);
-      console.log("Sorted Times:", arrTimes);
-
+  
+      // מיון המערך ועדכון ה-state
+      const sortedTimes = sortArrayByKey(times);
+      setArrTimes(sortedTimes);
+      console.log("Sorted Times:", sortedTimes);
+  
       // פעולת המשך
       optionParking();
     } catch (error) {
@@ -151,6 +189,7 @@ const Parking = () => {
       setIsLoading(false); // סיום טעינה
     }
   };
+
   const optionParking = async () => {
     if (indexOption >= 0 && indexOption < arrTimes.length) {
       setTravelMinTime(arrTimes[indexOption].key)
@@ -241,37 +280,71 @@ const Parking = () => {
     optionParking();
   };
   //הפונקציה אינה מושלמת
+  // const chooseParking = async () => {
+  //   hideInterestedDialog()
+  //   const params = {
+  //     Handicapped: product.isHandicappedCar,
+  //     size: product.sizeCar
+  //   }
+  //   console.log("params", params, "travelMinPark", travelMinPark)
+  //   try {
+  //     const res = await axios.get(`http://localhost:8090/api/parkinglot/getParkingEmptyOnSize/${travelMinPark}`, {
+  //       params: params
+  //     });
+  //     if (res.status === 200) {
+  //       setIndexOption(0)
+  //       console.log("parking", res.data)
+  //       setGoodP(res.data)
+  //     }
+  //   } catch (e) {
+  //     return [];
+  //   }
+  //   try {
+  //     console.log(product._id)
+  //     const res = await axios.put(`http://localhost:8090/api/parking/P/${goodP[0]._id}`, { carParking: product._id });
+  //     if (res.status === 200) {
+  //       console.log("parking in ", res.data.locationParking)
+  //       alert(`car number:${product.numberCar} parking in parkinglot:${travelMinPark} parking in parking:${res.data.locationParking}`)
+  //       goToOtherComponent();
+
+  //       setbool(false)
+  //     }
+  //   } catch (e) {
+  //     return [];
+  //   }
+  // };
   const chooseParking = async () => {
-    hideInterestedDialog()
+    hideInterestedDialog(); // סגירת הדיאלוג
+    setIsLoading(true); // הצגת טעינה
     const params = {
       Handicapped: product.isHandicappedCar,
       size: product.sizeCar
-    }
-    console.log("params", params, "travelMinPark", travelMinPark)
+    };
+  
     try {
-      const res = await axios.get(`http://localhost:8090/api/parkinglot/getParkingEmptyOnSize/${travelMinPark}`, {
+      // קבלת החניה הטובה ביותר
+      const res1 = await axios.get(`http://localhost:8090/api/parkinglot/getParkingEmptyOnSize/${travelMinPark}`, {
         params: params
       });
-      if (res.status === 200) {
-        setIndexOption(0)
-        console.log("parking", res.data)
-        setGoodP(res.data)
+      if (res1.status === 200) {
+        setGoodP(res1.data);
+        console.log("parking", res1.data);
+      }
+  
+      // עדכון החניה עם המידע של הרכב
+      if (res1.data && res1.data.length > 0) {
+        const res2 = await axios.put(`http://localhost:8090/api/parking/P/${res1.data[0]._id}`, { carParking: product._id });
+        if (res2.status === 200) {
+          console.log("parking in ", res2.data.locationParking);
+          alert(`car number:${product.numberCar} parking in parkinglot:${travelMinPark} parking in parking:${res2.data.locationParking}`);
+          goToOtherComponent();
+          setbool(false); // סיום התהליך
+        }
       }
     } catch (e) {
-      return [];
-    }
-    try {
-      console.log(product._id)
-      const res = await axios.put(`http://localhost:8090/api/parking/P/${goodP[0]._id}`, { carParking: product._id });
-      if (res.status === 200) {
-        console.log("parking in ", res.data.locationParking)
-        alert(`car number:${product.numberCar} parking in parkinglot:${travelMinPark} parking in parking:${res.data.locationParking}`)
-        goToOtherComponent();
-
-        setbool(false)
-      }
-    } catch (e) {
-      return [];
+      console.error("Error in chooseParking:", e);
+    } finally {
+      setIsLoading(false); // סיום טעינה
     }
   };
   const hideInterestedDialog = () => {
