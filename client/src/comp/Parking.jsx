@@ -2,35 +2,12 @@
 import axios from 'axios';
 import { MapContainer, TileLayer, Marker, Polyline } from "react-leaflet";
 import { Card } from 'primereact/card';
-
 import { useLocation } from 'react-router-dom';
 import React, { useState, useEffect, useRef } from 'react';
-import { classNames } from 'primereact/utils';
-import { DataTable } from 'primereact/datatable';
-import { Column } from 'primereact/column';
-import { Car } from './Car';
-import { Toast } from 'primereact/toast';
 import { Button } from 'primereact/button';
-import { FileUpload } from 'primereact/fileupload';
-import { Rating } from 'primereact/rating';
-import { Toolbar } from 'primereact/toolbar';
-import { InputTextarea } from 'primereact/inputtextarea';
-import { IconField } from 'primereact/iconfield';
-import { InputIcon } from 'primereact/inputicon';
-import { RadioButton } from 'primereact/radiobutton';
-import { InputNumber } from 'primereact/inputnumber';
 import { Dialog } from 'primereact/dialog';
-import { InputText } from 'primereact/inputtext';
-import { Tag } from 'primereact/tag';
-import { useDispatch, useSelector } from "react-redux";
-import { FaCheckCircle, FaExclamationCircle, FaTimesCircle } from 'react-icons/fa';
-import { TiParking } from 'react-icons/ti';
-import { IoMdCloseCircle } from 'react-icons/io';
-import { ToggleButton } from 'primereact/togglebutton';
-import { set } from 'react-hook-form';
-import { FaParking, FaMapMarkerAlt } from 'react-icons/fa';
 import { BrowserRouter as Router, Routes, Route, useNavigate } from "react-router-dom";
-import { getDistance } from 'geolib';
+
 
 const Parking = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -146,44 +123,7 @@ const Parking = () => {
       setIsLoading(false); // סיום טעינה
     }
   };
-  // const shortTime = async (address) => {
-  //   setIsLoading(true); // התחלת טעינה
-  //  debugger
-  //   try {
-  //     // כתובת מקומית של המחשב
-  //     setAddress1("49 Dror, Rishon LeZion, Israel");
-  
-  //     // קבלת כל החניות
-  //     const parkingLots = await allParking(); // שמירת התוצאה במשתנה מקומי
-  //     console.log("Total parking lots:", parkingLots.length);
-  
-  //     const times = []; // מערך זמני נסיעה
-  
-  //     // איטרציה על כל החניות
-  //     for (let parkingLot of parkingLots) {
-  //       const element = parkingLot.locationParkinglot;
-  //       const str = `${element.numberOfStreet} ${element.street}, ${element.city}, ${element.country}`;
-  
-  //       const res = await calculateTravelTime(str, address);
-  //       // console.log("Parking ID:", parkingLot._id);
-  
-  //       // הוספת התוצאה למערך
-  //       times.push({ key: `${res}`, value: `${parkingLot._id}` });
-  //     }
-  
-  //     // מיון המערך ועדכון ה-state
-  //     const sortedTimes = sortArrayByKey(times);
-  //     setArrTimes(sortedTimes);
-  //     // console.log("Sorted Times:", sortedTimes);
-  
-  //     // פעולת המשך
-  //     optionParking();
-  //   } catch (error) {
-  //     console.error("Error in shortTime:", error);
-  //   } finally {
-  //     setIsLoading(false); // סיום טעינה
-  //   }
-  // };
+ 
   
   const optionParking = async () => {
     if (indexOption >= 0 && indexOption < arrTimes.length) {

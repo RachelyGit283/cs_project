@@ -76,18 +76,14 @@ const Positionedparkings = () => {
 
         return index;
     };
-    // const exportCSV = () => {
-    //     dt.current.exportCSV();
-    // };
+ 
     const openNew = () => {
         setProduct(emptyProduct);
         setSubmitted(false);
         setChecked(emptyProduct.isHandicappedParking)
         setProductDialog(true);
     };
-    // const rightToolbarTemplate = () => {
-    //     return <Button label="Export" icon="pi pi-upload" className="p-button-help" onClick={exportCSV} />;
-    // };
+
     const confirmDeleteProduct = (product) => {
         // console.log("product", product)
         setProduct(product);
@@ -347,34 +343,34 @@ const Positionedparkings = () => {
                         <small >The location should be a capital letter followed by a number.  .</small>
 
                     </div>
-                    <div className="card flex justify-content-center">
+                    {/* <div className="card flex justify-content-center">
                         <Button label={idParkinglot} disabled />
-                    </div>
+                    </div> */}
                     <div className="field">
                         <label className="mb-3 font-bold">locationParking</label>
                         <div className="formgrid grid">
                             <div className="field-radiobutton col-6">
-                                <RadioButton inputId="Size1" name="Size" value="2" onChange={onCategoryChange} checked={product.Size === '2'} />
+                                <RadioButton inputId="Size1" name="Size" value="2" onChange={onCategoryChange} checked={product.sizeParking === '2'} />
                                 <label htmlFor="Size1">2</label>
                             </div>
                             <div className="field-radiobutton col-6">
-                                <RadioButton inputId="Size2" name="Size" value="5" onChange={onCategoryChange} checked={product.Size === '5'} />
+                                <RadioButton inputId="Size2" name="Size" value="5" onChange={onCategoryChange} checked={product.sizeParking === '5'} />
                                 <label htmlFor="Size2">5</label>
                             </div>
                             <div className="field-radiobutton col-6">
-                                <RadioButton inputId="Size3" name="Size" value="7" onChange={onCategoryChange} checked={product.Size === '7'} />
+                                <RadioButton inputId="Size3" name="Size" value="7" onChange={onCategoryChange} checked={product.sizeParking === '7'} />
                                 <label htmlFor="Size3">7</label>
                             </div>
                             <div className="field-radiobutton col-6">
-                                <RadioButton inputId="Size4" name="Size" value="Bus" onChange={onCategoryChange} checked={product.Size === 'Bus'} />
+                                <RadioButton inputId="Size4" name="Size" value="Bus" onChange={onCategoryChange} checked={product.sizeParking === 'Bus'} />
                                 <label htmlFor="Size4">Bus</label>
                             </div>
                             <div className="field-radiobutton col-6">
-                                <RadioButton inputId="Size5" name="Size" value="7+" onChange={onCategoryChange} checked={product.Size === '7+'} />
+                                <RadioButton inputId="Size5" name="Size" value="7+" onChange={onCategoryChange} checked={product.sizeParking === '7+'} />
                                 <label htmlFor="Size5">7+</label>
                             </div>
                             <div className="field-radiobutton col-6">
-                                <RadioButton inputId="Size6" name="Size" value="MiniBus" onChange={onCategoryChange} checked={product.Size === 'MiniBus'} />
+                                <RadioButton inputId="Size6" name="Size" value="MiniBus" onChange={onCategoryChange} checked={product.sizeParking === 'MiniBus'} />
                                 <label htmlFor="Size6">MiniBus</label>
                             </div>
                         </div>
