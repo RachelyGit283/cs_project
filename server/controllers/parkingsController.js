@@ -3,7 +3,8 @@ const Parkings = require("../models/Parkings");
 const Users = require("../models/Users");
 const Parkinglots = require("../models/Parkinglots");
 const Cars = require("../models/Cars");
-const twilio = require('twilio');
+// const twilio = require('twilio');
+const nodemailer = require('nodemailer');
 require('dotenv').config();
 // const accountSid = process.env.TWILIO_ACCOUNT_SID; // החלף ב-Account SID שלך
 // const authToken =process.env.TWILIO_AUTH_TOKEN;   // החלף ב-Auth Token שלך
@@ -21,6 +22,32 @@ require('dotenv').config();
 //         console.error('Error making call:', error);
 //     }
 // }
+
+const transporter = nodemailer.createTransport({
+    service: 'Outlook365', // או 'hotmail' אם אתה משתמש בחשבון Hotmail
+    auth: {
+        user: '38215085283@mby.co.il', // כתובת המייל שלך
+        pass: 'Student@264', // הסיסמה שלך
+    }
+});
+function sendEmail(to, subject, text) {
+    const mailOptions = {
+        from: '38215085283@mby.co.il', // כתובת המייל שלך
+        to: to, // כתובת המייל של הנמען
+        subject: subject, // נושא המייל
+        text: text, // תוכן המייל
+    };
+
+    return new Promise((resolve, reject) => {
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                reject(error);
+            } else {
+                resolve(info.response);
+            }
+        });
+    });
+}
 // creat1
 function isValidString(str) {
     const regex = /^[A-Z][0-9]+$/;
@@ -32,7 +59,7 @@ const createNewParking = async (req, res) => {
     if (!user) {
         return res.status(400).json({ message: 'No user' })
     }
-    console.log(user.rolesUser)
+    // console.log(user.rolesUser)
     if (user.rolesUser != "managerParkinglot") {
         return res.status(400).json({ message: 'No rolse' })
     }
@@ -51,7 +78,7 @@ const createNewParking = async (req, res) => {
             try {
 
                 const parkinglots = await Parkinglots.findById(parkinglotOfParking);
-                console.log(parkinglots)
+                // console.log(parkinglots)
 
                 if (!parkinglots) {
                     return res.status(400).json({ message: 'No Parkinglots' })
@@ -63,13 +90,13 @@ const createNewParking = async (req, res) => {
             } catch (error) {
                 return res.status(500).json({ message: 'Error geting Parkinglots', error });
             }
-           
+
             return res.status(201).json(Parkings)
         } else {
             return res.status(400).json({ message: 'Invalid parkings' })
         }
     } catch (error) {
-        if (error.code === 11000) { 
+        if (error.code === 11000) {
             console.error('Duplicate parking entry: ', error.message);
         }
         return res.status(500).json({ message: 'Error creating parking', error });
@@ -152,7 +179,7 @@ const updateParkings = async (req, res) => {
             }
         }
         const updateParkings = await parkings.save()
-  
+
         return res.status(201).json(parkings)
     } catch (error) {
         return res.status(500).json({ message: 'Error updating parking', error });
@@ -200,11 +227,50 @@ const updatePcar = async (req, res) => {
         const updatep = await parkings.save();
         await car.save();
 
-        const index = parkings.intrestedParking.indexOf(carParking);
-        if (index !== -1) {
-            parkings.intrestedParking.splice(index, 1);
+        // const index = parkings.intrestedParking.indexOf(carParking);
+        // if (index !== -1) {
+        //     parkings.intrestedParking.splice(index, 1);
+        // }
+
+
+        // for (let index = 0; index < parkings.intrestedParking.length; index++) {
+        //     const element = parkings.intrestedParking[index];
+        //     try {
+        //         console.log("element",element)
+        //         const cars = await Cars.findById(element).populate("userCar").lean();
+        //         if (!cars) {
+        //             return res.status(400).json({ message: 'No Cars' })
+        //         }
+        //         sendEmail(cars.userCar.emailUser, "interested", `you interester in ${parkings.locationParking}`)
+        //     } catch (error) {
+        //         return res.status(500).json({ message: 'no send mail', error });
+        //     }
+        //     // if (index !== -1) {
+        //     //     parkings.intrestedParking.splice(index, 1);
+        //     // }
+        // }
+        const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+        for (let index = 0; index < parkings.intrestedParking.length; index++) {
+            const element = parkings.intrestedParking[index];
+            try {
+                console.log("element", element);
+                const cars = await Cars.findById(element).populate("userCar").lean();
+                if (!cars) {
+                    return res.status(400).json({ message: 'No Cars' });
+                }
+        
+                await sendEmail(cars.userCar.emailUser, "interested", `You are interested in ${parkings.locationParking}`);
+                
+                // עיכוב בין שליחות, לדוגמה: 1 שנייה
+                await delay(1000);
+            } catch (error) {
+                console.error("Error sending email to:", element, error);
+            }
         }
 
+
+        parkings.intrestedParking = [];
         res.json(parkings);
     } catch (error) {
         console.error('Error updating parking:', error);
@@ -230,18 +296,18 @@ const updateUPcar = async (req, res) => {
         car.isParkingCar = false;
         parkings.carParking = null;
         const dateNow = format(new Date(), "yyyy-MM-dd\tHH:mm:ss")
-        const date1 = new Date( parkings.timeStartParking);
+        const date1 = new Date(parkings.timeStartParking);
         const date2 = new Date(dateNow);
 
         // חישוב ההפרש בדקות
-        const dateDiffDays = Math.abs((date2 - date1) / (1000 * 60))* parkings.priceParking;
-        console.log("dateDiffDays",dateDiffDays)
+        const dateDiffDays = Math.abs((date2 - date1) / (1000 * 60)) * parkings.priceParking;
+        // console.log("dateDiffDays", dateDiffDays)
 
         const updatep = await parkings.save()
         await car.save()
         const parkings2 = await Parkings.find().lean()
-        console.log("dateDiffDays",date1)
-        console.log("dateDiffDays", date2)
+        // console.log("dateDiffDays", date1)
+        // console.log("dateDiffDays", date2)
 
 
         if (!parkings2?.length) {

@@ -2,8 +2,6 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
-import { Dropdown } from 'primereact/dropdown';
-import { Calendar } from 'primereact/calendar';
 import { Password } from 'primereact/password';
 import { Checkbox } from 'primereact/checkbox';
 import { Dialog } from 'primereact/dialog';
@@ -40,11 +38,7 @@ export default function Register() {
         
         try {
             const res = await axios.post(`http://localhost:8090/api/auth/register`, data)
-            // console.log(res.data.accessToken);
-
-            // if (res.status === 409)
-            //     alert(res.data)
-        
+            // console.log(res.data.accessToken)
             setFormData(data);
             setShowMessage(true);
             reset();

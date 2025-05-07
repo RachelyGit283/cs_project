@@ -46,12 +46,12 @@ export default function Login() {
             if (res.status != "200") {
                 alert(res.data);
             }
-            console.log(res.data);
+            // console.log(res.data);
             dispatch(setToken(res.data.accessToken));
             dispatch(setRole(res.data.rolesUser));
             dispatch(setUser(res.data.foundUser));
-            console.log(res.data.rolesUser)
-            console.log(token)
+            // console.log(res.data.rolesUser)
+            // console.log(token)
             setFormData(data);
             setShowMessage(true);
 
