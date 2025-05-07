@@ -5,7 +5,6 @@ import { InputText } from 'primereact/inputtext';
 import  { Suspense } from 'react';
 import { Link, Route, Routes, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from "react-redux";
-import myLogo from '.';
 
 import { Badge } from 'primereact/badge';
 import { Avatar } from 'primereact/avatar'; 
@@ -49,7 +48,7 @@ const Menu = () => {
         {},
     ];
 
-    const start = <img alt="logo" onClick={()=>{navigate('/')}} src="https://primefaces.org/cdn/primereact/images/logo.png" height="40" className="mr-2"></img>;
+    const start = <img alt="logo" onClick={()=>{navigate('/')}} src="/car1.png" height="40" className="mr-2"></img>;
 
     return (
         <div className="card">

@@ -2,56 +2,50 @@ const Parkinglots = require("../models/Parkinglots");
 const Users = require("../models/Users");
 // creat1
 const createNewParkinglots = async (req, res) => {
-    const { _id } = req.user
-    const user = await Users.findById(_id, { passwordUser: 0 }).lean()
-    if (!user) {
-            return res.status(400).json({ message: 'No user' })
+    try {
+        const { _id } = req.user;
+        const user = await Users.findById(_id, { passwordUser: 0 }).lean();
+        
+        if (!user) {
+            return res.status(400).json({ message: 'No user' });
+        }
+
+        if (user.rolesUser !== "managerParkinglot") {
+            return res.status(400).json({ message: 'No roles' });
+        }
+
+        const { nameParkinglot, managerParkinglot, country, city, street, numberOfStreet, sizeParkinglot } = req.body;
+        if (!nameParkinglot || !managerParkinglot || !country || !city || !street || !numberOfStreet || !sizeParkinglot) {
+            return res.status(400).json({ message: 'The items are required' });
+        }
+
+        const manager = await Users.findById(managerParkinglot).lean();
+        if (!manager || manager.rolesUser !== 'managerParkinglot') {
+            return res.status(400).json({ message: 'Not managerParkinglot' });
+        }
+
+        const parkinglot = await Parkinglots.create({
+            nameParkinglot,
+            managerParkinglot,
+            locationParkinglot: {
+                country,
+                city,
+                street,
+                numberOfStreet
+            },
+            sizeParkinglot
+        });
+
+        if (parkinglot) {
+            return res.status(201).json(parkinglot);
+        }
+
+        return res.status(400).json({ message: 'Invalid parkinglots' });
+    } catch (error) {
+        console.error('Error creating parking lot:', error);
+        return res.status(500).json({ message: 'Server error' });
     }
-    if(user.rolesUser!="managerParkinglot")
-        {            return res.status(400).json({ message: 'No rolse' })
-}
-    const { nameParkinglot, managerParkinglot, country, city, street, numberOfStreet, sizeParkinglot } = req.body
-    if (!nameParkinglot || !managerParkinglot || !country || !city || !street || !numberOfStreet || !sizeParkinglot) {
-        return res.status(400).json({ message: 'the items are required' })
-    }
-    // console.log({ nameParkinglot, managerParkinglot, country, city, street, numberOfStreet, sizeParkinglot });
-
-    const manager = await Users.findById(managerParkinglot).lean()
-    if (!manager || manager.rolesUser != 'managerParkinglot') {
-        return res.status(400).json({ message: 'not managerParkinglot' })
-
-    }
-
-    const parkinglot = await Parkinglots.create({
-        nameParkinglot,
-        managerParkinglot,
-        locationParkinglot: {
-            country,
-            city,
-            street,
-            numberOfStreet
-        },
-        sizeParkinglot
-    });
-    if (parkinglot) {
-
-        //     const MParkinglots = await ManagerParkinglots.findById(managerParkinglot).lean()
-        //     if (!MParkinglots) {
-        //         return res.status(400).json({ message: 'No managerParkinglots' })
-        //     }
-        //     MParkinglots.allParkMParkinglot.push(parkinglot);
-
-
-        // const parkinglots2 = await Parkinglots.find().lean()
-        // if (!parkinglots2?.length) {
-        //     return res.status(400).json({ message: 'No parkinglots found' })
-        // }
-        return res.status(201).json(parkinglot)
-    }
-    return res.status(400).json({ message: 'Invalid parkinglots' })
-
-
-}
+};
 const getParkinglotsById = async (req, res) => {
     const { _id } = req.params
     try {
@@ -78,12 +72,17 @@ const getParkinglotsByIdManager = async (req, res) => {
 }
 //read//כל החניונים
 const getAllParkinglots = async (req, res) => {
-    const parkinglots = await Parkinglots.find().lean()
-    if (!parkinglots?.length) {
-        return res.status(400).json({ message: 'No Parkinglots found' })
+    try {
+        const parkinglots = await Parkinglots.find().lean();
+        if (!parkinglots?.length) {
+            return res.status(400).json({ message: 'No Parkinglots found' });
+        }
+        res.json(parkinglots);
+    } catch (error) {
+        console.error('Error fetching parking lots:', error);
+        return res.status(500).json({ message: 'Server error' });
     }
-    res.json(parkinglots)
-}
+};
 //כל החניונים של אדם שמחובר למערכת 
 const getParkinglotsByUser = async (req, res) => {
     const { _id } = req.user
@@ -186,7 +185,7 @@ const getParkingEmptyOnSize = async (req, res) => {
 // מספר מקומות החניה הריקים
 const getCParkingEmpty = async (req, res) => {
     const { id } = req.params;
-    // try {
+    try {
     const parkinglot = await Parkinglots.findById(id).populate({
         path: 'allParkinglot',
         match: {
@@ -203,9 +202,9 @@ const getCParkingEmpty = async (req, res) => {
     const emptyParkingCount = parkinglot.length;
 
     return res.json({ emptyParkingCount });
-    // } catch (error) {
-    //     return res.status(500).json({ message: 'Error retrieving parking empty', error });
-    // }
+    } catch (error) {
+        return res.status(500).json({ message: 'Error retrieving parking empty', error });
+    }
 };
 
 //רק חניות שאינן נכה כל החניונים שיש בהם חניות פניות
@@ -221,7 +220,6 @@ const getParkingLotEmptyNoHandicapped = async (req, res) => {
                 sizeParking: size
             }
         }).exec();
-        // console.log("fgsgsgdfdag",parkingLots[0].allParkinglot,"jhhhhhhhhh",parkingLots[1].allParkinglot),"jhhhhhhhhh",parkingLots[2].allParkinglot;
         // סינון החניונים שבהם יש לפחות חניה פנויה
         const filteredParkingLots = parkingLots.filter(parkinglot => {
             return parkinglot.allParkinglot && parkinglot.allParkinglot.length > 0;
@@ -307,10 +305,7 @@ const updateParkinglots = async (req, res) => {
         if (!parkinglots) {
             return res.status(400).json({ message: 'parkinglots not found' })
         }
-        // parkinglots.locationParkinglot.city= {
-        //         country?: country.toLowerCase(),
-        //         city: city.toLowerCase()
-        //     }
+   
         if (numberOfStreet) parkinglots.locationParkinglot.numberOfStreet = numberOfStreet;
         if (country) parkinglots.locationParkinglot.country = country.toLowerCase();
         if (street) parkinglots.locationParkinglot.street = street.toLowerCase();

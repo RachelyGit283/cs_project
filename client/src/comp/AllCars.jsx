@@ -41,16 +41,17 @@ export default function AllCars() {
     const dt = useRef(null);
     const token = useSelector((state) => state.token.token);
     const navigate = useNavigate();
-
     useEffect(() => {
         Car.getProducts(token).then((data) => setProducts(data));
-    }, []);
+    }, [products]);
     const formatCurrency = (value) => {
         return value.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
     };
-    function isValidString(str) {
-        const regex = /^[A-Z][0-9]+$/;
-        return regex.test(str);
+    function isValidNumberString(input) {
+        const isOnlyNumbers = /^[0-9]+$/.test(input); 
+        const isAtLeast7 = input.length >= 7; 
+    
+        return isOnlyNumbers && isAtLeast7; // החזרת true אם שתי הבדיקות עוברות
     }
     const openNew = () => {
         setProduct(emptyProduct);
@@ -86,8 +87,8 @@ export default function AllCars() {
                 toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Product Updated', life: 3000 });
             }
             else {
-                if (!isValidString(product.locationParking)) {
-                    return alert("מיקום חניה צריך להתחיל באות גדולה אחת ומספר אחריה")
+                if (!isValidNumberString(product.numberCar)) {
+                    return alert("Vehicle number is at least 7 digits.")
         
                 }
                 const res = await axios.post(`http://localhost:8090/api/Car`, product, {
@@ -106,7 +107,8 @@ export default function AllCars() {
             setProductDialog(false);
             setProduct(emptyProduct);
         }
-        
+        // Car.getProducts(token).then((data) => setProducts(data));
+
     }
     else
         alert("מיספר רכב וגודלו הינם חובה")
@@ -135,7 +137,7 @@ export default function AllCars() {
         catch (a) {
             console.log("server error", a);
         }
-        Car.getProducts(token).then((data) => setProducts(data));
+        // Car.getProducts(token).then((data) => setProducts(data));
 
         toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Product Deleted', life: 3000 });
     };
@@ -378,7 +380,7 @@ export default function AllCars() {
                     <InputText id="name" value={product.numberCar} onChange={(e) => onInputChange(e, 'numberCar')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.numberCar })} />
                     {submitted && !product.numberCar && <small className="p-error">numberCar is required.</small>}
                     <br/>
-                    <small >The location should be a capital letter followed by a number.  .</small>
+                    <small >Vehicle number is at least 7 digits..  .</small>
                 </div>
                
                 <div className="field">

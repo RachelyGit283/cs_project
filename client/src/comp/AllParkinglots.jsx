@@ -49,7 +49,7 @@ export default function AllParkinglots() {
 
     useEffect(() => {
         getAllParking(token).then((data) => setProducts(data));
-    }, []);
+    }, [products]);
     const formatCurrency = (value) => {
         return value.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
     };
@@ -118,6 +118,8 @@ export default function AllParkinglots() {
                 setProducts(_products);
                 setProductDialog(false);
                 setProduct(emptyProduct);
+                // getAllParking(token).then((data) => setProducts(data));
+
             }
             else
                 alert("מיקום חניון וגודלו הינם חובה")
@@ -155,7 +157,7 @@ export default function AllParkinglots() {
             console.log("server error", a);
         }
         toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Product Deleted', life: 3000 });
-        getAllParking(token).then((data) => setProducts(data));
+        // getAllParking(token).then((data) => setProducts(data));
 
     };
     const release = async () => {

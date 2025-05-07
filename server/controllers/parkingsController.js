@@ -49,7 +49,6 @@ const createNewParking = async (req, res) => {
         const parkings = await Parkings.create({ locationParking, isHandicappedParking, sizeParking, parkinglotOfParking, priceParking })
         if (parkings) {
             try {
-                // console.log("parkinglots", parkinglotOfParking)
 
                 const parkinglots = await Parkinglots.findById(parkinglotOfParking);
                 console.log(parkinglots)
@@ -57,26 +56,20 @@ const createNewParking = async (req, res) => {
                 if (!parkinglots) {
                     return res.status(400).json({ message: 'No Parkinglots' })
                 }
-                // console.log(parkinglots.allParkinglot)
                 parkinglots.allParkinglot.push(parkings);
-                // console.log(parkinglots.allParkinglot)
 
                 parkinglots.save();
-                // console.log(parkinglots.allParkinglot)
 
             } catch (error) {
                 return res.status(500).json({ message: 'Error geting Parkinglots', error });
             }
-            // const parkings2 = await Parkings.find().lean()
-            // if (!parkings2?.length) {
-            //     return res.status(400).json({ message: 'No parkings found' })
-            // }
+           
             return res.status(201).json(Parkings)
         } else {
             return res.status(400).json({ message: 'Invalid parkings' })
         }
     } catch (error) {
-        if (error.code === 11000) { // Duplicate key error
+        if (error.code === 11000) { 
             console.error('Duplicate parking entry: ', error.message);
         }
         return res.status(500).json({ message: 'Error creating parking', error });
@@ -159,10 +152,7 @@ const updateParkings = async (req, res) => {
             }
         }
         const updateParkings = await parkings.save()
-        // const parkings2 = await Parkings.find().lean()
-        // if (!parkings2?.length) {
-        //     return res.status(400).json({ message: 'No parkings2 found' })
-        // }
+  
         return res.status(201).json(parkings)
     } catch (error) {
         return res.status(500).json({ message: 'Error updating parking', error });
@@ -171,53 +161,56 @@ const updateParkings = async (req, res) => {
 
 // להפוך רכב לחונה
 const updatePcar = async (req, res) => {
-    const { format } = require("date-fns")
-    const { id } = req.params
-    const { carParking } = req.body
-    if (!id || !carParking) {
-        return res.status(400).json({ message: 'fields are required' })
+    try {
+        const { format } = require("date-fns");
+        const { id } = req.params;
+        const { carParking } = req.body;
+
+        if (!id || !carParking) {
+            return res.status(400).json({ message: 'fields are required' });
+        }
+
+        const parkings = await Parkings.findById(id).exec();
+        if (!parkings) {
+            return res.status(400).json({ message: 'Parkings not found' });
+        }
+        if (parkings.isFullParking) {
+            return res.status(400).json({ message: 'The Parkings is full' });
+        }
+
+        const car = await Cars.findById(carParking).exec();
+        if (!car) {
+            return res.status(400).json({ message: 'No car found' });
+        }
+        if (car.isParkingCar) {
+            return res.status(400).json({ message: 'The car is parking' });
+        }
+        if (parkings.sizeParking != car.sizeCar) {
+            return res.status(400).json({ message: 'The Parkings are not in the same size' });
+        }
+        if (parkings.isHandicappedParking != car.isHandicappedCar) {
+            return res.status(400).json({ message: 'HandicappedParking' });
+        }
+
+        parkings.isFullParking = true;
+        car.isParkingCar = true;
+        parkings.carParking = carParking;
+        parkings.timeStartParking = format(new Date(), "yyyy-MM-dd\tHH:mm:ss");
+
+        const updatep = await parkings.save();
+        await car.save();
+
+        const index = parkings.intrestedParking.indexOf(carParking);
+        if (index !== -1) {
+            parkings.intrestedParking.splice(index, 1);
+        }
+
+        res.json(parkings);
+    } catch (error) {
+        console.error('Error updating parking:', error);
+        return res.status(500).json({ message: 'Server error' });
     }
-    // try {
-
-    const parkings = await Parkings.findById(id).exec()
-    if (!parkings) {
-        return res.status(400).json({ message: 'Parkings not found' })
-    }
-    if (parkings.isFullParking) { return res.status(400).json({ message: 'The Parkings is full' }) }
-    const car = await Cars.findById(carParking).exec()
-    if (!car) { return res.status(400).json({ message: 'No car found' }) }
-    if (car.isParkingCar) { return res.status(400).json({ message: 'The car is parking' }) }
-    if (parkings.sizeParking != car.sizeCar) { return res.status(400).json({ message: 'The Parkings are not in the same size ' }) }
-    if (parkings.isHandicappedParking != car.isHandicappedCar) { return res.status(400).json({ message: 'HandicappedParking' }) }
-
-    parkings.isFullParking = true;
-    car.isParkingCar = true;
-    parkings.carParking = carParking;
-    parkings.timeStartParking = format(new Date(), "yyyy-MM-dd\tHH:mm:ss");
-    const updatep = await parkings.save()
-    await car.save()
-    // const parkings2 = await Parkings.find().lean()
-    // for (let index = 0; index < parkings.intrestedParking.length; index++) {
-    //     const element = parkings.intrestedParking[index];
-    // const userId = element.userId;
-
-    // makeCall()
-
-    // }
-    const index = parkings.intrestedParking.indexOf(carParking);
-    if (index !== -1) {
-        parkings.intrestedParking.splice(index, 1);
-    }
-    // if (!parkings2?.length) {
-    //     return res.status(400).json({ message: 'No Parkings found' })
-    // }
-    res.json(parkings)
-    // } catch (error) {
-    //     return res.status(500).json({ message: 'Error updating parking', error });
-    // }
-
-}
-
+};
 // להפוך רכב ללא לחונה
 const updateUPcar = async (req, res) => {
     const { format } = require("date-fns")
@@ -231,7 +224,6 @@ const updateUPcar = async (req, res) => {
             return res.status(400).json({ message: 'Parkings not found' })
         }
         const car = await Cars.findById(parkings.carParking).exec()
-        // console.log(car)
         if (!car) { return res.status(400).json({ message: 'No car found' }) }
         if (!parkings.isFullParking || !car.isParkingCar) { return res.status(400).json({ message: 'not parking' }) }
         parkings.isFullParking = false;
@@ -245,7 +237,6 @@ const updateUPcar = async (req, res) => {
         const dateDiffDays = Math.abs((date2 - date1) / (1000 * 60))* parkings.priceParking;
         console.log("dateDiffDays",dateDiffDays)
 
-        // const dateDiffDays = parseInt((parkings.timeStartParking - dateNow) / (1000 * 60 * 60 * 24 * 30)) * parkings.priceParking;
         const updatep = await parkings.save()
         await car.save()
         const parkings2 = await Parkings.find().lean()

@@ -1,7 +1,12 @@
 //finish
 const Cars = require("../models/Cars");
 const Users = require("../models/Users");
+function isValidNumberString(input) {
+    const isOnlyNumbers = /^[0-9]+$/.test(input); 
+    const isAtLeast7 = input.length >= 7; 
 
+    return isOnlyNumbers && isAtLeast7; 
+}
 // creat1
 const createNewCars = async (req, res) => {
     const { numberCar, isHandicappedCar, sizeCar } = req.body
@@ -9,6 +14,8 @@ const createNewCars = async (req, res) => {
         return res.status(400).json({ message: 'numberCar and sizeCar are required' })
     }
     try {
+        if(!isValidNumberString)
+           {return res.status(400).json({ message: 'it is not number of car' })} 
 
         // "req.user._id"
         const cars = await Cars.create({ numberCar, userCar: req.user._id, isHandicappedCar, sizeCar })
@@ -109,6 +116,9 @@ const updateCars = async (req, res) => {
     if (!id) {
         return res.status(400).json({ message: 'field is required' })
     }
+    if (numberCar)
+        {        if(!isValidNumberString)
+            {return res.status(400).json({ message: 'it is not number of car' })} }
     try {
         const cars = await Cars.findById(id).exec()
         if (!cars) {

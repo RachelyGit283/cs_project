@@ -29,13 +29,18 @@ function isValidIsraeliID(id) {
 //הרשאות גישה וMIDDELWARE
 //read
 const getAllUsers = async (req, res) => {
-        const users = await Users.find({}, { passwordUser: 0 }).lean()
-        if (!users?.length) {
-                return res.status(400).json({ message: 'No users found' })
+        try {
+            const users = await Users.find({}, { passwordUser: 0 }).lean();
+            if (!users?.length) {
+                return res.status(400).json({ message: 'No users found' });
+            }
+            console.log(users);
+            res.json(users);
+        } catch (error) {
+            console.error('Error fetching users:', error);
+            return res.status(500).json({ message: 'Server error' });
         }
-        console.log(users);
-        res.json(users)
-}
+    };
 // const getFilterUsers = async (req, res) => {
 //         const { _id } = req.user
 //         const users = await Users.find({name:obj}).lean()
@@ -45,29 +50,46 @@ const getAllUsers = async (req, res) => {
 //         res.json(users)
 //         }
 const getUserById = async (req, res) => {
-        const { _id } = req.params
-        const user = await Users.findById(_id, { passwordUser: 0 }).lean()
-        if (!user) {
-                return res.status(400).json({ message: 'No user' })
+        try {
+            const { _id } = req.params;
+            const user = await Users.findById(_id, { passwordUser: 0 }).lean();
+            if (!user) {
+                return res.status(400).json({ message: 'No user' });
+            }
+            res.json(user);
+        } catch (error) {
+            console.error('Error fetching user by ID:', error);
+            return res.status(500).json({ message: 'Server error' });
         }
-        res.json(user)
-}
-const getUserByConnect = async (req, res) => {
-        const { _id } = req.user
-        const user = await Users.findById(_id, { passwordUser: 0 }).populate("carsUser").lean()
-        if (!user) {
-                return res.status(400).json({ message: 'No user' })
+    };
+    
+    const getUserByConnect = async (req, res) => {
+        try {
+            const { _id } = req.user;
+            const user = await Users.findById(_id, { passwordUser: 0 }).populate("carsUser").lean();
+            if (!user) {
+                return res.status(400).json({ message: 'No user' });
+            }
+            res.json(user);
+        } catch (error) {
+            console.error('Error fetching connected user:', error);
+            return res.status(500).json({ message: 'Server error' });
         }
-        res.json(user)
-}
-const getUserByRoles = async (req, res) => {
-        const { id } = req.params
-        const user = await Users.find(({ rolesUser: id })).lean()
-        if (!user) {
-                return res.status(400).json({ message: 'No users' })
+    };
+    
+    const getUserByRoles = async (req, res) => {
+        try {
+            const { id } = req.params;
+            const user = await Users.find({ rolesUser: id }).lean();
+            if (!user || user.length === 0) {
+                return res.status(400).json({ message: 'No users' });
+            }
+            res.json(user);
+        } catch (error) {
+            console.error('Error fetching users by roles:', error);
+            return res.status(500).json({ message: 'Server error' });
         }
-        res.json(user)
-}
+    };
 //  const getUserByEmail = async (req, res) => {
 //             const email = req.body
 //             const user = await Users.find(email).lean()

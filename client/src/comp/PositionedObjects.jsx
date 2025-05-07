@@ -37,7 +37,10 @@ const Positionedparkings = () => {
     const [deleteProductDialog, setDeleteProductDialog] = useState(false);
     const [idParkinglot, setIdParkinglot] = useState(props._id);
     const toast = useRef(null);
-
+    function isValidString(str) {
+        const regex = /^[A-Z][0-9]+$/;
+        return regex.test(str);
+    }
 
     let emptyProduct = {
         _id: '',
@@ -126,6 +129,10 @@ const Positionedparkings = () => {
                     }
                 }
                 else {
+                    if (!isValidString(product.locationParking)) {
+                        return alert("מיקום חניה צריך להתחיל באות גדולה אחת ומספר אחריה")
+            
+                    }
                     try {
                         const res = await axios.post(`http://localhost:8090/api/Parking`, product, {
                             headers: {
@@ -147,7 +154,7 @@ const Positionedparkings = () => {
                 }
 
                 setParkings(_products);
-                getAllParking(token).then((data) => setParkings(data));
+                // getAllParking(token).then((data) => setParkings(data));
 
                 setProductDialog(false);
                 setProduct(emptyProduct);
@@ -337,6 +344,8 @@ const Positionedparkings = () => {
 
                         <InputText id="name" value={product.locationParking} onChange={(e) => onInputChange(e, 'locationParking')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.locationParking })} />
                         {submitted && !product.numberCar && <small className="p-error">locationParking is required.</small>}
+                        <small >The location should be a capital letter followed by a number.  .</small>
+
                     </div>
                     <div className="card flex justify-content-center">
                         <Button label={idParkinglot} disabled />
