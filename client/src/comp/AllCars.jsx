@@ -48,6 +48,10 @@ export default function AllCars() {
     const formatCurrency = (value) => {
         return value.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
     };
+    function isValidString(str) {
+        const regex = /^[A-Z][0-9]+$/;
+        return regex.test(str);
+    }
     const openNew = () => {
         setProduct(emptyProduct);
         setSubmitted(false);
@@ -82,7 +86,10 @@ export default function AllCars() {
                 toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Product Updated', life: 3000 });
             }
             else {
-
+                if (!isValidString(product.locationParking)) {
+                    return alert("מיקום חניה צריך להתחיל באות גדולה אחת ומספר אחריה")
+        
+                }
                 const res = await axios.post(`http://localhost:8090/api/Car`, product, {
                     headers: {
                         'Authorization': `Bearer ${token}`
@@ -370,6 +377,8 @@ export default function AllCars() {
                     </label>
                     <InputText id="name" value={product.numberCar} onChange={(e) => onInputChange(e, 'numberCar')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.numberCar })} />
                     {submitted && !product.numberCar && <small className="p-error">numberCar is required.</small>}
+                    <br/>
+                    <small >The location should be a capital letter followed by a number.  .</small>
                 </div>
                
                 <div className="field">

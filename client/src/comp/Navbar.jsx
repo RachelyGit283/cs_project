@@ -5,6 +5,7 @@ import { InputText } from 'primereact/inputtext';
 import  { Suspense } from 'react';
 import { Link, Route, Routes, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from "react-redux";
+import myLogo from '.';
 
 import { Badge } from 'primereact/badge';
 import { Avatar } from 'primereact/avatar'; 

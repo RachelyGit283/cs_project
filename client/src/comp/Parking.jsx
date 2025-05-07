@@ -74,6 +74,11 @@ const Parking = () => {
     // עדכון הכתובת הנוכחית
     setCurrentUrl(window.location.href);
   }, []);
+  useEffect(() => {
+    if (arrTimes.length > 0) {
+      optionParking(); // קריאה לפונקציה רק לאחר ש-arrTimes עודכן
+    }
+  }, [arrTimes]); // מעקב אחרי שינויים ב-arrTimes
   const Loader = () => (
     <div className="loader">
       <div className="spinner"></div>
@@ -93,8 +98,8 @@ const Parking = () => {
         params: params
       });
       if (res.status === 200) {
-        // console.log("parking", res.data)
-        if (res.data == []) { alert("אין כרגע חניות פנויות") }
+        //  console.log("parking", res.data)
+        if (res.data.length===0) { return alert("אין כרגע חניות פנויות") }
         setAllPark(res.data)
         return res.data;
       }
@@ -111,10 +116,8 @@ const Parking = () => {
       return 0;
     });
   };
-  
   const shortTime = async (address) => {
     setIsLoading(true); // התחלת טעינה
-  
     try {
       // כתובת מקומית של המחשב
       setAddress1("49 Dror, Rishon LeZion, Israel");
@@ -130,27 +133,58 @@ const Parking = () => {
         const element = parkingLot.locationParkinglot;
         const str = `${element.numberOfStreet} ${element.street}, ${element.city}, ${element.country}`;
   
-        const res = await calculateTravelTime(str, address1);
-        // console.log("Parking ID:", parkingLot._id);
-  
-        // הוספת התוצאה למערך
+        const res = await calculateTravelTime(str, address);
         times.push({ key: `${res}`, value: `${parkingLot._id}` });
       }
   
       // מיון המערך ועדכון ה-state
       const sortedTimes = sortArrayByKey(times);
-      setArrTimes(sortedTimes);
-      // console.log("Sorted Times:", sortedTimes);
-  
-      // פעולת המשך
-      optionParking();
+      setArrTimes(sortedTimes); // optionParking תופעל אוטומטית דרך useEffect
     } catch (error) {
       console.error("Error in shortTime:", error);
     } finally {
       setIsLoading(false); // סיום טעינה
     }
   };
-
+  // const shortTime = async (address) => {
+  //   setIsLoading(true); // התחלת טעינה
+  //  debugger
+  //   try {
+  //     // כתובת מקומית של המחשב
+  //     setAddress1("49 Dror, Rishon LeZion, Israel");
+  
+  //     // קבלת כל החניות
+  //     const parkingLots = await allParking(); // שמירת התוצאה במשתנה מקומי
+  //     console.log("Total parking lots:", parkingLots.length);
+  
+  //     const times = []; // מערך זמני נסיעה
+  
+  //     // איטרציה על כל החניות
+  //     for (let parkingLot of parkingLots) {
+  //       const element = parkingLot.locationParkinglot;
+  //       const str = `${element.numberOfStreet} ${element.street}, ${element.city}, ${element.country}`;
+  
+  //       const res = await calculateTravelTime(str, address);
+  //       // console.log("Parking ID:", parkingLot._id);
+  
+  //       // הוספת התוצאה למערך
+  //       times.push({ key: `${res}`, value: `${parkingLot._id}` });
+  //     }
+  
+  //     // מיון המערך ועדכון ה-state
+  //     const sortedTimes = sortArrayByKey(times);
+  //     setArrTimes(sortedTimes);
+  //     // console.log("Sorted Times:", sortedTimes);
+  
+  //     // פעולת המשך
+  //     optionParking();
+  //   } catch (error) {
+  //     console.error("Error in shortTime:", error);
+  //   } finally {
+  //     setIsLoading(false); // סיום טעינה
+  //   }
+  // };
+  
   const optionParking = async () => {
     if (indexOption >= 0 && indexOption < arrTimes.length) {
       setTravelMinTime(arrTimes[indexOption].key)
@@ -264,6 +298,7 @@ const Parking = () => {
 
       // המרות כתובות לקואורדינטות באמצעות Nominatim API
       const getCoordinates = async (address) => {
+        
         const response = await axios.get(
           `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
             address
@@ -279,8 +314,9 @@ const Parking = () => {
       //צריל להיות :
       //const coords1 = await getCoordinates(address1);
       //const coords2 = await getCoordinates(address2);
+      
       const coords1 = await getCoordinates(a2);
-      //  debugger
+        // debugger
       const coords2 = await getCoordinates(a1);
 
       // בקשה למסלול וזמן נסיעה באמצעות OSRM API
@@ -318,7 +354,7 @@ const Parking = () => {
         label="חניה אופציונלית"
         icon="pi pi-map-marker"
         className="p-button-raised p-button-rounded p-button-success"
-        onClick={() => shortTime(currentUrl)}
+        onClick={() => shortTime("49 Dror, Rishon LeZion, Israel")}
       />
 )}
 
