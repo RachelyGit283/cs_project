@@ -8,7 +8,6 @@ import { Password } from 'primereact/password';
 import { Checkbox } from 'primereact/checkbox';
 import { Dialog } from 'primereact/dialog';
 import { Divider } from 'primereact/divider';
-import { add } from "../Store/CarSlice"
 import { useSelector,useDispatch } from "react-redux"
 import { classNames } from 'primereact/utils';
 import './FormData.css';
@@ -20,7 +19,6 @@ export default function Register() {
     const [countries, setCountries] = useState([]);
     const [showMessage, setShowMessage] = useState(false);
     const [formData, setFormData] = useState({});
-    const myUser = useSelector(x=>x.CarSlice)
     const dispatch = useDispatch() 
     const navigate = useNavigate();
 
@@ -47,7 +45,6 @@ export default function Register() {
             // if (res.status === 409)
             //     alert(res.data)
         
-            dispatch(add(res))
             setFormData(data);
             setShowMessage(true);
             reset();

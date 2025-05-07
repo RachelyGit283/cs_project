@@ -30,7 +30,7 @@
 
 
 
- import { createSlice } from '@reduxjs/toolkit';
+//  import { createSlice } from '@reduxjs/toolkit';
 
 // // טוען את ה-TOKEN מ-LocalStorage אם הוא קיים, אחרת שומר אותו כ-null
 // const i = {
@@ -57,22 +57,55 @@
 
 // export const { setToken, logOut } = tokenSlice.actions;
 // export default tokenSlice.reducer;
-const i = {
-    token: null, // אין צורך לטעון מ-localStorage
-};
+// const i = {
+//     token: null,
+//      // אין צורך לטעון מ-localStorage
+// };
 
+// const TokenSlice = createSlice({
+//     name: 'token',
+//     initialState: i,
+//     reducers: {
+//         setToken(state, action) {
+//             state.token = action.payload;
+//         },
+        
+//         logOut(state) {
+//             state.token = null;
+//         },
+//     },
+// });
+
+// export const { setToken, logOut } = TokenSlice.actions;
+// export default TokenSlice.reducer;
+
+import { createSlice } from '@reduxjs/toolkit'
+const i={
+token:null,
+user:{},
+role:""
+}
 const tokenSlice = createSlice({
     name: 'token',
     initialState: i,
     reducers: {
         setToken(state, action) {
-            state.token = action.payload;
+            state.token = action.payload
         },
-        logOut(state) {
+        setUser(state, action) {
+            state.user = action.payload
+        },
+        setRole(state, action) {
+            state.role = action.payload
+        },
+        logOut(state, action) {
             state.token = null;
-        },
-    },
-});
+            state.user = null;
+            state.role = null;
 
-export const { setToken, logOut } = tokenSlice.actions;
-export default tokenSlice.reducer;
+        }
+    }
+})
+
+export const { setToken, logOut,setUser,setRole } = tokenSlice.actions
+export default tokenSlice.reducer

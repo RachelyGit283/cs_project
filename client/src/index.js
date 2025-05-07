@@ -5,17 +5,10 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom';
 import { configureStore } from '@reduxjs/toolkit';
-import CarSlice from './Store/CarSlice';
 import { Provider } from 'react-redux'
 import { store, persistor  } from './Store/store'
 import { PersistGate } from 'redux-persist/integration/react';
-import UserSlice from './Store/UserSlice';
-const myStore = configureStore({
-  reducer:{
-    CarSlice,
-    UserSlice
-  }
-})
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <BrowserRouter>

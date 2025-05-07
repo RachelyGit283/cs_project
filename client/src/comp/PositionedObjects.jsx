@@ -154,7 +154,7 @@ const Positionedparkings = () => {
                 }
 
                 setParkings(_products);
-                // getAllParking(token).then((data) => setParkings(data));
+                getAllParking(token).then((data) => setParkings(data));
 
                 setProductDialog(false);
                 setProduct(emptyProduct);
@@ -241,7 +241,7 @@ const Positionedparkings = () => {
     };
     useEffect(() => {
         getAllParking(token).then((data) => setParkings(data));
-    }, [parkings]);
+    }, []);
     const onInputChange = (e, name) => {
         const val = (e.target && e.target.value) || '';
         let _product = { ...product };

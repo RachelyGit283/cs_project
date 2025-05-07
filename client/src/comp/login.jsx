@@ -7,23 +7,23 @@ import { Password } from 'primereact/password';
 import { Dialog } from 'primereact/dialog';
 import { Divider } from 'primereact/divider';
 import { classNames } from 'primereact/utils';
-import { setToken } from "../Store/tokenSlice";
-import { setRolse } from "../Store/rolseSlice";
+import { setRole,setToken,setUser } from '../Store/tokenSlice';
+// import { setRolse } from "../Store/rolseSlice";
 import { useDispatch, useSelector } from "react-redux";
 import './FormData.css';
 import axios from 'axios';
 import { BrowserRouter as Router, Routes, Route, useNavigate } from "react-router-dom";
 import Menu from './Navbar';
-import { setUser } from '../Store/UserSlice';
+// import { setUser } from '../Store/UserSlice';
 
 export default function Login() {
     const [countries, setCountries] = useState([]);
     const [showMessage, setShowMessage] = useState(false);
     const [formData, setFormData] = useState({});
     const dispatch = useDispatch();
-    const token = useSelector((state) => state.token.token);
-    const rolse = useSelector((state) => state.rolse.rolse);
-    const user = useSelector((state) => state.user.user);
+    const {token} = useSelector((state) => state.token);
+    const {role} = useSelector((state) => state.token);
+    const {user} = useSelector((state) => state.token);
 
     const navigate = useNavigate();
     const goToOtherComponent = () => {
@@ -46,11 +46,12 @@ export default function Login() {
             if (res.status != "200") {
                 alert(res.data);
             }
+            console.log(res.data);
             dispatch(setToken(res.data.accessToken));
-            dispatch(setRolse(res.data.rolesUser));
+            dispatch(setRole(res.data.rolesUser));
             dispatch(setUser(res.data.foundUser));
-            // console.log(res.data.rolesUser)
-            // console.log(token)
+            console.log(res.data.rolesUser)
+            console.log(token)
             setFormData(data);
             setShowMessage(true);
 

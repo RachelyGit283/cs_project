@@ -17,7 +17,7 @@ const LazyAllParkinglots = React.lazy(()=>import('./AllParkinglots'))
 
 const Menu = () => {
     const navigate = useNavigate();
-    const rolse = useSelector((state) => state.rolse.rolse);
+    const {role} = useSelector((state) => state.token);
 
     const items = [
         {  
@@ -36,7 +36,7 @@ const Menu = () => {
             }
         },
      
-        rolse === 'managerParkinglot'  ?
+        role === 'managerParkinglot'  ?
         {
         
             label:'AllParkinglots',

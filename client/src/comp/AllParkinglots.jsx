@@ -18,7 +18,7 @@ import {  useSelector } from "react-redux";
 import {  FaMapMarkerAlt } from 'react-icons/fa';
 import { BrowserRouter as Router, useNavigate } from "react-router-dom";
 export default function AllParkinglots() {
-    const user = useSelector((state) => state.user.user);
+    const {user} = useSelector((state) => state.token);
 
     let emptyProduct = {
         _id: '',
@@ -49,7 +49,7 @@ export default function AllParkinglots() {
 
     useEffect(() => {
         getAllParking(token).then((data) => setProducts(data));
-    }, [products]);
+    }, []);
     const formatCurrency = (value) => {
         return value.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
     };
@@ -118,7 +118,7 @@ export default function AllParkinglots() {
                 setProducts(_products);
                 setProductDialog(false);
                 setProduct(emptyProduct);
-                // getAllParking(token).then((data) => setProducts(data));
+                getAllParking(token).then((data) => setProducts(data));
 
             }
             else
@@ -157,7 +157,7 @@ export default function AllParkinglots() {
             console.log("server error", a);
         }
         toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Product Deleted', life: 3000 });
-        // getAllParking(token).then((data) => setProducts(data));
+        getAllParking(token).then((data) => setProducts(data));
 
     };
     const release = async () => {

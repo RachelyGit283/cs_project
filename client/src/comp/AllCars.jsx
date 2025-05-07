@@ -43,7 +43,7 @@ export default function AllCars() {
     const navigate = useNavigate();
     useEffect(() => {
         Car.getProducts(token).then((data) => setProducts(data));
-    }, [products]);
+    }, []);
     const formatCurrency = (value) => {
         return value.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
     };
@@ -107,7 +107,7 @@ export default function AllCars() {
             setProductDialog(false);
             setProduct(emptyProduct);
         }
-        // Car.getProducts(token).then((data) => setProducts(data));
+        Car.getProducts(token).then((data) => setProducts(data));
 
     }
     else
@@ -137,7 +137,7 @@ export default function AllCars() {
         catch (a) {
             console.log("server error", a);
         }
-        // Car.getProducts(token).then((data) => setProducts(data));
+        Car.getProducts(token).then((data) => setProducts(data));
 
         toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Product Deleted', life: 3000 });
     };
